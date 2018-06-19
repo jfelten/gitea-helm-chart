@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "fullname" . }}
+    spec:
+      containers:
+      {{ include "postgres" . | indent 6 }}
+      {{ include "gitea" . | indent 6 }}
+      initContainers: 
+      {{ include "init" . | indent 6 }}
+      volumes:
+      - name: gitea-data
+      {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+         claimName: {{ template "fullname" . }}
+      {{- else }}
+      emptyDir: {}
+      {{- end }}
+      - name: postgres-data
+      {{- if .Values.persistence.enabled }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingClaim | default (include "postgresql.fullname" .) }}
+      {{- else }}
+        emptyDir: {}
+      {{- end }}
+      - name: gitea-config
+        configMap:
+          name: {{ template "fullname" . }}
+    
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecrets }}
+      {{- end }}
+

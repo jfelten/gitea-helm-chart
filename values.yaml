@@ -1,0 +1,158 @@
+## Gitea image
+## ref: https://hub.docker.com/r/gitea/gitea/tags/
+##
+
+## ingress settings - Optional
+ingress: 
+  protocol: http
+  enabled: true
+  useSSL: false
+  host: git.lab2.keyporttech.com
+  # sometimes if is necesary to access through an external port i.e. http(s)://<dns-name>:<external-port>
+  externalPort: 8280
+  
+  ## annotations used by the ingress - ex for k8s nginx iungress controller:
+  ingress_annotations: 
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: basic-auth
+    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - lab2"
+
+images:
+  gitea: "gitea/gitea:1.4.2"
+  postgres: "postgres:9.6.2"
+  imagePullPolicy: IfNotPresent
+  ## Specify imagePullSecrets
+  ## ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+  ##
+  # imagePullSecrets: myregistrykey
+
+## chart defaults to using an ingress, but change to LoadBalancer if using you cluster supports it
+serviceType: ClusterIP
+sshPort: 22
+giteaPort: 3000
+postgresPort: 5432
+
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+##
+resources:
+  gitea:
+    requests:
+      memory: 100Mi
+      cpu: 500m
+    limits:
+      memory: 2Gi
+      cpu: 1
+  postgres:
+    requests:
+      memory: 256Mi
+      cpu: 100m
+     
+
+## Enable persistence using Persistent Volume Claims
+## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+## ref:
+##
+persistence:
+  enabled: true
+  giteaSize: 10Gi
+  postgresSize: 5Gi
+  storageClass: glusterfs
+  accessMode: ReadWriteMany
+
+postgres:
+    secret: postgresecrets
+    
+    
+    ## Create a database user
+    ## Default: postgres
+    # postgresUser:
+    ## Default: random 10 character string
+    # postgresPassword:
+    
+    ## Inject postgresPassword via a volume mount instead of environment variable
+    usePasswordFile: false
+    
+    ## Use Existing secret instead of creating one
+    ## It must have a postgres-password key containing the desired password
+    # existingSecret: 'secret'
+    
+    ## Create a database
+    ## Default: the postgres user
+    postgresDatabase: gitea
+    
+    ## Specify initdb arguments, e.g. --data-checksums
+    ## ref: https://github.com/docker-library/docs/blob/master/postgres/content.md#postgres_initdb_args
+    ## ref: https://www.postgresql.org/docs/current/static/app-initdb.html
+    # postgresInitdbArgs:
+    
+    ## Use an alternate scheduler, e.g. "stork".
+    ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
+    ##
+    # schedulerName:
+    
+    ## Specify runtime config parameters as a dict, using camelCase, e.g.
+    ## {"sharedBuffers": "500MB"}
+    ## ref: https://www.postgresql.org/docs/current/static/runtime-config.html
+    # postgresConfig:
+    
+    ## Persist data to a persistent volume
+    persistence:
+      enabled: true
+    
+      ## A manually managed Persistent Volume and Claim
+      ## Requires persistence.enabled: true
+      ## If defined, PVC must be created manually before volume will be bound
+      # existingClaim:
+    
+      ## database data Persistent Volume Storage Class
+      ## If defined, storageClassName: <storageClass>
+      ## If set to "-", storageClassName: "", which disables dynamic provisioning
+      ## If undefined (the default) or set to null, no storageClassName spec is
+      ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+      ##   GKE, AWS & OpenStack)
+      ##
+      # storageClass: "-"
+      accessMode: ReadWriteOnce
+      size: 8Gi
+      subPath: "postgresql-db"
+      mountPath: /var/lib/postgresql/data/pgdata
+    
+      # annotations: {}
+    
+  
+    
+    service:
+      type: ClusterIP
+      port: 5432
+      externalIPs: []
+      ## Manually set NodePort value
+      ## Requires service.type: NodePort
+      # nodePort:
+    
+    networkPolicy:
+      ## Enable creation of NetworkPolicy resources.
+      ##
+      enabled: false
+    
+      ## The Policy model to apply. When set to false, only pods with the correct
+      ## client label will have network access to the port PostgreSQL is listening
+      ## on. When true, PostgreSQL will accept connections from any source
+      ## (with the correct destination port).
+      ##
+      allowExternal: true
+    
+    ## Node labels and tolerations for pod assignment
+    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
+    ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#taints-and-tolerations-beta-feature
+    nodeSelector: {}
+    tolerations: []
+    affinity: {}
+    
+    ## Annotations for the deployment and nodes.
+    deploymentAnnotations: {}
+    podAnnotations: {}
