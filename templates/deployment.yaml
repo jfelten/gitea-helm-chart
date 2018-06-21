@@ -25,7 +25,7 @@ spec:
         persistentVolumeClaim:
          claimName: {{ .Values.persistence.existingGiteaClaim | default (include "fullname" .) }}
       {{- else }}
-      emptyDir: {}
+        emptyDir: {}
       {{- end }}
       - name: postgres-data
       {{- if .Values.persistence.enabled }}

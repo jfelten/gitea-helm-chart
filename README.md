@@ -108,3 +108,42 @@ To expose the web application this chart will generate an ingress using the ingr
 
 Refer to [values.yaml](values.yaml) for the full run-down on defaults.
 
+The following table lists the configurable parameters of this chart and their default values.
+
+| Parameter                  | Description                                     | Default                                                    |
+| -----------------------    | ---------------------------------------------   | ---------------------------------------------------------- |
+| `images.gitea`                    | `gitea` image                     | `gitea/gitea:1.4.2`                                                 |
+| `images.postgres`                 | `postgres` image                            | `postgres:9.6.2`                                                    |
+| `images.imagePullPolicy`          | Image pull policy                               | `Always` if `imageTag` is `latest`, else `IfNotPresent`    |
+| `images.imagePullSecrets`         | Image pull secrets                              | `nil`                                                      |
+| `ingress.enable`             | Switch to create ingress for this chart deployment                 | `false`                                                 |
+| `ingress.useSSL`         | Changes default protocol to SSL?                      | false                                       |
+| `ingress.ingress_annotations`          | annotations used by the ingress | `nil`                                                    |
+| `service.http.serviceType`         | type of kubernetes services used for http i.e. ClusterIP, NodePort or LoadBalancer                | `ClusterIP`                                                 |
+| `service.http.port`       | http port for web traffic                               | `3000`                                                      |
+| `service.http.NodePort`            |  Manual NodePort for web traffic                 | `nil`                                                      |
+| `service.http.externalPort`           | Port exposed on the internet by a load balancer or firewall that redirects to the ingress or NodePort        | `nil`                                                      |
+| `service.http.externalHost`           | IP or DNS name exposed on the internet by a load balancer or firewall that redirects to the ingress or Node for http traffic                       | `nil`                                                      |
+| `service.ssh.serviceType`         | type of kubernetes services used for ssh i.e. ClusterIP, NodePort or LoadBalancer                | `ClusterIP`                                                 |
+| `service.ssh.port`       | http port for web traffic                               | `22`                                                      |
+| `service.ssh.NodePort`            |  Manual NodePort for ssh traffic                 | `nil`                                                      |
+| `service.ssh.externalPort`           | Port exposed on the internet by a load balancer or firewall that redirects to the ingress or NodePort        | `nil`                                                      |
+| `service.ssh.externalHost`           | IP or DNS name exposed on the internet by a load balancer or firewall that redirects to the ingress or Node for http traffic                                                      |
+| `resources.gitea.requests.memory`         | gitea container memory request                             | `100Mi`                                                      |
+| `resources.gitea.requests.cpu`      | gitea container request cpu          | `500m`                                            |
+| `resources.gitea.limits.memory`    | gitea container memory limits                      | `2Gi`                          |
+| `resources.gitea.limits.cpu`                | gitea container CPU/Memory resource requests/limits             | Memory: `1`                               |
+| `resources.postgres.requests.memory`         | postgres container memory request                             | `256Mi`                                                      |
+| `resources.postgres.requests.cpu`      | gitea container request cpu          | `100m`                                            |
+| `persistence.enabled`        | Create PVCs to store gitea and postgres data?                | `false`                               |
+| `peristence.existingGiteaClaim`    | Already existing PVC that should be used for gitea data.                       | `nil`                                                      |
+| `peristence.existingPostgresClaim`      |Already existing PVC that should be used for postgres data.                      | `[]`                                                       |
+| `persistence.giteaSize`             | Size of gitea pvc to create                                        | `10Gi`                                                     |
+| `persistence.postgresSize`             | Size of postgres pvc to create | `5Gi`                                                |
+| `persistence.storageClass`         | NStorageClass to use for dynamic provision if not 'default'    | `nil`                                                      |
+| `persistence.annotations`    | Annotations to set on created PVCs                           | `nil`                                                    |
+| `postgres.secret` | Generated Secret to store postgres passwords   | `postgressecrets`                                                     |
+| `postgres.subPath`             | Subpath for Postgres data storage                  | `nil`                                                         |
+| `postgres.dataMountPath`             | Path for Postgres data storage                  | `nil`                                                         |
+| `affinity`                 | Affinity settings for pod assignment            | {}                                                         |
+| `tolerations`              | Toleration labels for pod assignment            | []                                                         

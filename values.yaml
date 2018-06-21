@@ -32,9 +32,9 @@ service:
     externalPort: 8280
     externalHost: git.example.com
   ssh:
-    serviceType: NodePort
+    serviceType: ClusterIP
     port: 22
-    nodePort: 30222
+    #nodePort: 30222
     ## if serving on a different external port used for determining the ssh url in the gui
     #externalPort: 8022
     #externalHost: git.example.com
@@ -61,12 +61,12 @@ resources:
 ## ref:
 ##
 persistence:
-  enabled: true
-  existingGiteaClaim: gitea-gitea
-  existingPostgresClaim: gitea-postgres
+  enabled: false
+  #existingGiteaClaim: gitea-gitea
+  #existingPostgresClaim: gitea-postgres
   giteaSize: 10Gi
   postgresSize: 5Gi
-  storageClass: glusterfs
+  #storageClass: glusterfs
   accessMode: ReadWriteMany
 ## addtional annotations for hte pvcs  uncommenting below will prevent helm from deleting the pvc when hte chart is deleted
 #  annotations:
