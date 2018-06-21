@@ -112,26 +112,26 @@ data:
     
     [server]
     ; The protocol the server listens on. One of 'http', 'https', 'unix' or 'fcgi'.
-    {{- if eq .Values.ingress.protocol "https"  }}
+    {{- if .Values.ingress.useSSL  }}
     PROTOCOL = https
     {{- else }}
     PROTOCOL = http
     {{- end }}
-    {{- if and .Values.ingress.enabled ( .Values.ingress.host)  }}
-    DOMAIN = {{ .Values.ingress.host }}
+    {{- if .Values.service.http.externalHost }}
+    DOMAIN = {{ .Values.service.http.externalHost }}
     {{- else }}
-    DOMAIN = localhost
+    DOMAIN = {{ template "fullname" . }}-http.{{ .Release.Namespace }}.svc.cluster.local
     {{- end -}}
-    {{- if and .Values.ingress.enabled ( .Values.ingress.externalPort ) }}
-    ROOT_URL = %(PROTOCOL)s://%(DOMAIN)s:{{ .Values.ingress.externalPort  }}/
-    {{- else if .Values.ingress.enabled }}
-    ROOT_URL = %(PROTOCOL)s://%(DOMAIN)s/
+    {{- if and .Values.service.http.externalHost ( .Values.service.http.externalPort ) }}
+    ROOT_URL = %(PROTOCOL)s://{{ .Values.service.http.externalHost }}:{{ .Values.service.http.externalPort  }}/
+    {{- else if .Values.service.http.externalHost }}
+    ROOT_URL = %(PROTOCOL)s://{{ .Values.service.http.externalHost }}/
     {{- else }}
     ROOT_URL = %(PROTOCOL)s://%(DOMAIN)s:%(HTTP_PORT)s/
     {{- end -}}
     ; The address to listen on. Either a IPv4/IPv6 address or the path to a unix socket.
     HTTP_ADDR = 0.0.0.0
-    HTTP_PORT = 3000
+    HTTP_PORT = {{ .Values.service.http.port }}
     ; If REDIRECT_OTHER_PORT is true, and PROTOCOL is set to https an http server
     ; will be started on PORT_TO_REDIRECT and it will redirect plain, non-secure http requests to the main
     ; ROOT_URL.  Defaults are false for REDIRECT_OTHER_PORT and 80 for
@@ -152,13 +152,21 @@ data:
     ; Username to use for the builtin SSH server. If blank, then it is the value of RUN_USER.
     BUILTIN_SSH_SERVER_USER =
     ; Domain name to be exposed in clone URL
-    SSH_DOMAIN = %(DOMAIN)s
+    {{- if .Values.service.ssh.externalHost  }}
+    SSH_DOMAIN = {{ .Values.service.ssh.externalHost  }}
+    {{- else }}
+    SSH_DOMAIN = {{ template "fullname" . }}-ssh.{{ .Release.Namespace }}.svc.cluster.local
+    {{- end }}
     ; THe network interface the builtin SSH server should listen on
     SSH_LISTEN_HOST =
     ; Port number to be exposed in clone URL
-    SSH_PORT = 22
+    {{- if .Values.service.ssh.externalPort  }}
+    SSH_PORT = {{ .Values.service.ssh.externalPort  }}
+    {{- else }}
+    SSH_PORT = {{ .Values.service.ssh.port  }}
+    {{- end }}
     ; The port number the builtin SSH server should listen on
-    SSH_LISTEN_PORT = %(SSH_PORT)s
+    SSH_LISTEN_PORT = {{ .Values.service.ssh.port  }}
     ; Root path of SSH directory, default is '~/.ssh', but you have to use '/home/git/.ssh'.
     SSH_ROOT_PATH =
     ; For the built-in SSH server, choose the ciphers to support for SSH connections,

@@ -1,20 +1,20 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "fullname" . }}
+  name: {{ template "fullname" . }}-http
   labels:
     app: {{ template "fullname" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
 spec:
-  type: {{ .Values.serviceType }}
+  type: {{ .Values.service.http.serviceType }}
   ports:
-  - name: ssh
-    port: 22
-    targetPort: ssh
   - name: http
-    port: 80
-    targetPort: 3000
+    port: {{ .Values.service.http.port }}
+    {{- if  .Values.service.http.nodePort }}
+    nodePort: {{ .Values.service.http.nodePort }}
+    {{- end }}
+    targetPort: {{ .Values.service.http.port }}
   selector:
     app: {{ template "fullname" . }}

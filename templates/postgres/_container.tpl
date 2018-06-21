@@ -54,8 +54,8 @@ Create helm partial for postgres server
 {{ toYaml .Values.resources.postgres | indent 10 }}
   volumeMounts:
   - name: postgres-data
-    mountPath: {{ .Values.postgres.persistence.mountPath }}
-    subPath: {{ .Values.persistence.subPath }}
+    mountPath: {{ .Values.postgres.dataMountPath }}
+    subPath: {{ .Values.postgres.subPath }}
   {{- if .Values.usePasswordFile }}
   - name: password-file
     mountPath: /conf

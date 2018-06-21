@@ -23,14 +23,14 @@ spec:
       - name: gitea-data
       {{- if .Values.persistence.enabled }}
         persistentVolumeClaim:
-         claimName: {{ template "fullname" . }}
+         claimName: {{ .Values.persistence.existingGiteaClaim | default (include "fullname" .) }}
       {{- else }}
       emptyDir: {}
       {{- end }}
       - name: postgres-data
       {{- if .Values.persistence.enabled }}
         persistentVolumeClaim:
-          claimName: {{ .Values.persistence.existingClaim | default (include "postgresql.fullname" .) }}
+          claimName: {{ .Values.persistence.existingPostgresClaim | default (include "postgresql.fullname" .) }}
       {{- else }}
         emptyDir: {}
       {{- end }}

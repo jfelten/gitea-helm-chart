@@ -13,11 +13,11 @@ metadata:
 {{ toYaml .Values.ingress.ingress_annotations | indent 4 }}
 spec:
   rules:
-  - host: {{ .Values.ingress.host }}
+  - host: {{ .Values.service.http.externalHost }}
     http:
       paths:
       - path: /
         backend:
-          serviceName: {{ template "fullname" . }}
-          servicePort: 80
+          serviceName: {{ template "fullname" . }}-http
+          servicePort: {{ .Values.service.http.port }}
 {{- end }}

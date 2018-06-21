@@ -13,9 +13,9 @@ Create helm partial for gitea server
         key: postgres-password
   ports:
   - name: ssh
-    containerPort: 22
+    containerPort: {{ .Values.service.ssh.port  }}
   - name: http
-    containerPort: 3000
+    containerPort: {{ .Values.service.http.port  }}
   livenessProbe:
     tcpSocket:
       port: http
