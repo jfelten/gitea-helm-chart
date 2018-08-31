@@ -8,7 +8,7 @@ This is a kubernetes helm chart for [Gitea](https://gitea.com/) a lightweight gi
 This chart was developed and tested on kubernetes version 1.10, but should work on earlier or later versions.
 
 ## Prerequisites
- 
+
 - A kubernetes cluster ( most recent release recommended)
 - helm client and tiller installed on the cluster
 - Please ensure that nodepools have enough resources to run both a web application and database
@@ -26,17 +26,17 @@ or locally:
 $ helm install --name gitea --namewspace tools .
 ```
 > **Tip**: You can use the default [values.yaml](values.yaml)
-> 
+>
 ### Example custom_values.yaml configs
 
 This configuration creates pvcs with the storageclass glusterfs that cannot be deleted by helm, a kubernetes nginx ingress that serves the web application on external dns name git.example.com:8880 and exposes ssh through a NodePort that is exposed externally on a router using port 8022. The external DNS name for ssh is git.example.com.
 
 ```yaml
-ingress: 
+ingress:
   enabled: true
   useSSL: false
   ## annotations used by the ingress - ex for k8s nginx ingress controller:
-  ingress_annotations: 
+  ingress_annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
@@ -57,7 +57,7 @@ service:
     nodePort: 30222
     externalPort: 8022
     externalHost: git.example.com
-     
+
 persistence:
   enabled: true
   giteaSize: 10Gi
@@ -67,7 +67,6 @@ persistence:
   annotations:
     "helm.sh/resource-policy": keep
 ```
-
 
 ## Uninstalling the Chart
 
@@ -83,7 +82,7 @@ The command removes all the Kubernetes components associated with the chart and 
 
 This chart will use and create optional persistent volume claims for both postgres and gitea data.  By default the data will be deleted upon uninstalling the chart. This is not ideal but can be managed in a couple ways:
 
-* prevent helm from deleting the pvcs it creates.  Do this by enabling annotation: helm.sh/resource-policy": keep in the pvc optional annotations 
+* prevent helm from deleting the pvcs it creates.  Do this by enabling annotation: helm.sh/resource-policy": keep in the pvc optional annotations
 
 ```yaml
 persistence:
@@ -146,4 +145,4 @@ The following table lists the configurable parameters of this chart and their de
 | `postgres.subPath`             | Subpath for Postgres data storage                  | `nil`                                                         |
 | `postgres.dataMountPath`             | Path for Postgres data storage                  | `nil`                                                         |
 | `affinity`                 | Affinity settings for pod assignment            | {}                                                         |
-| `tolerations`              | Toleration labels for pod assignment            | []                                                         
+| `tolerations`              | Toleration labels for pod assignment            | []
