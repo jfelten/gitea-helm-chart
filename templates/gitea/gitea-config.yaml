@@ -1,3 +1,4 @@
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: '{{ template "fullname" . }}'
@@ -6,16 +7,16 @@ data:
     ; This file lists the default values used by Gitea
     ; Copy required sections to your own app.ini (default is custom/conf/app.ini)
     ; and modify as needed.
-    
+
     ; see https://docs.gitea.io/en-us/config-cheat-sheet/ for additional documentation.
-    
+
     ; App name that shows in every page title
     APP_NAME = Gitea: Git with a cup of tea
     ; Change it if you run locally
     RUN_USER = git
     ; Either "dev", "prod" or "test", default is "dev"
     RUN_MODE = dev
-    
+
     [repository]
     ROOT =
     SCRIPT_TYPE = bash
@@ -38,7 +39,7 @@ data:
     DISABLE_HTTP_GIT = false
     ; Force ssh:// clone url instead of scp-style uri when default SSH port is used
     USE_COMPAT_SSH_URI = false
-    
+
     [repository.editor]
     ; List of file extensions for which lines should be wrapped in the CodeMirror editor
     ; Separate extensions with a comma. To line wrap files without an extension, just put a comma
@@ -46,13 +47,13 @@ data:
     ; Valid file modes that have a preview API associated with them, such as api/v1/markdown
     ; Separate the values by commas. The preview tab in edit mode won't be displayed if the file extension doesn't match
     PREVIEWABLE_FILE_MODES = markdown
-    
+
     [repository.local]
     ; Path for local repository copy. Defaults to `tmp/local-repo`
     LOCAL_COPY_PATH = tmp/local-repo
     ; Path for local wiki copy. Defaults to `tmp/local-wiki`
     LOCAL_WIKI_PATH = tmp/local-wiki
-    
+
     [repository.upload]
     ; Whether repository file uploads are enabled. Defaults to `true`
     ENABLED = true
@@ -64,7 +65,11 @@ data:
     FILE_MAX_SIZE = 3
     ; Max number of files per upload. Defaults to 5
     MAX_FILES = 5
-    
+
+    [repository.pull-request]
+    ; List of prefixes used in Pull Request title to mark them as Work In Progress
+    WORK_IN_PROGRESS_PREFIXES=WIP:,[WIP]
+
     [ui]
     ; Number of repositories that are displayed on one explore page
     EXPLORE_PAGING_NUM = 20
@@ -72,6 +77,10 @@ data:
     ISSUE_PAGING_NUM = 10
     ; Number of maximum commits displayed in one activity feed
     FEED_MAX_COMMIT_NUM = 5
+    ; Number of maximum commits displayed in commit graph.
+    GRAPH_MAX_COMMIT_NUM = 100
+    ; Number of line of codes shown for a code comment
+    CODE_COMMENT_LINES = 4
     ; Value of `theme-color` meta tag, used by Android >= 5.0
     ; An invalid color like "none" or "disable" will have the default style
     ; More info: https://developers.google.com/web/updates/2014/11/Support-for-theme-color-in-Chrome-39-for-Android
@@ -80,26 +89,29 @@ data:
     MAX_DISPLAY_FILE_SIZE = 8388608
     ; Whether the email of the user should be shown in the Explore Users page
     SHOW_USER_EMAIL = true
-    
+    ; Set the default theme for the Gitea install
+    DEFAULT_THEME = gitea
+
+
     [ui.admin]
     ; Number of users that are displayed on one page
     USER_PAGING_NUM = 50
     ; Number of repos that are displayed on one page
     REPO_PAGING_NUM = 50
-    ; Number of notices that are displayed on in one page
+    ; Number of notices that are displayed on one page
     NOTICE_PAGING_NUM = 25
     ; Number of organizations that are displayed on one page
     ORG_PAGING_NUM = 50
-    
+
     [ui.user]
     ; Number of repos that are displayed on one page
     REPO_PAGING_NUM = 15
-    
+
     [ui.meta]
     AUTHOR = Gitea - Git with a cup of tea
     DESCRIPTION = Gitea (Git with a cup of tea) is a painless self-hosted Git service written in Go
     KEYWORDS = go,git,self-hosted,gitea
-    
+
     [markdown]
     ; Enable hard line break extension
     ENABLE_HARD_LINE_BREAK = false
@@ -109,7 +121,7 @@ data:
     ; List of file extensions that should be rendered/edited as Markdown
     ; Separate the extensions with a comma. To render files without any extension as markdown, just put a comma
     FILE_EXTENSIONS = .md,.markdown,.mdown,.mkd
-    
+
     [server]
     ; The protocol the server listens on. One of 'http', 'https', 'unix' or 'fcgi'.
     {{- if .Values.ingress.useSSL  }}
@@ -208,6 +220,12 @@ data:
     APP_DATA_PATH = data
     ; Application level GZIP support
     ENABLE_GZIP = false
+    ; Application profiling (memory and cpu)
+    ; For "web" command it listens on localhost:6060
+    ; For "serve" command it dumps to disk at PPROF_DATA_PATH as (cpuprofile|memprofile)_<username>_<temporary id>
+    ENABLE_PPROF = false
+    ; PPROF_DATA_PATH, use an absolute path when you start gitea as service
+    PPROF_DATA_PATH = data/tmp/pprof
     ; Landing page, can be "home", "explore", or "organizations"
     LANDING_PAGE = home
     ; Enables git-lfs support. true or false, default is false.
@@ -218,14 +236,14 @@ data:
     LFS_JWT_SECRET =
     ; LFS authentication validity period (in time.Duration), pushes taking longer than this may fail.
     LFS_HTTP_AUTH_EXPIRY = 20m
-    
+
     ; Define allowed algorithms and their minimum key length (use -1 to disable a type)
     [ssh.minimum_key_sizes]
     ED25519 = 256
     ECDSA = 256
     RSA = 2048
     DSA = 1024
-    
+
     [database]
     ; Either "mysql", "postgres", "mssql" or "sqlite3", it's your choice
     DB_TYPE = postgres
@@ -244,7 +262,7 @@ data:
     ITERATE_BUFFER_SIZE = 50
     ; Show the database generated SQL
     LOG_SQL = true
-    
+
     [indexer]
     ISSUE_INDEXER_PATH = indexers/issues.bleve
     ; repo indexer by default disabled, since it uses a lot of disk space
@@ -252,11 +270,11 @@ data:
     REPO_INDEXER_PATH = indexers/repos.bleve
     UPDATE_BUFFER_LEN = 20
     MAX_FILE_SIZE = 1048576
-    
+
     [admin]
     ; Disallow regular (non-admin) users from creating organizations.
     DISABLE_REGULAR_ORG_CREATION = false
-    
+
     [security]
     ; Whether the installer is disabled
     INSTALL_LOCK = false
@@ -274,7 +292,7 @@ data:
     IMPORT_LOCAL_PATHS = false
     ; Prevent all users (including admin) from creating custom git hooks
     DISABLE_GIT_HOOKS = false
-    
+
     [openid]
     ;
     ; OpenID is an open, standard and decentralized authentication protocol.
@@ -308,7 +326,7 @@ data:
     ; Only used if WHITELISTED_URIS is blank.
     ; Example value: loadaverage.org/badguy stackexchange.com/.*spammer
     BLACKLISTED_URIS =
-    
+
     [service]
     ; Time limit to confirm account/email registration
     ACTIVE_CODE_LIVE_MINUTES = 180
@@ -328,13 +346,22 @@ data:
     ENABLE_REVERSE_PROXY_AUTHENTICATION = false
     ENABLE_REVERSE_PROXY_AUTO_REGISTRATION = false
     ; Enable captcha validation for registration
-    ENABLE_CAPTCHA = true
+    ENABLE_CAPTCHA = false
+    ; Type of captcha you want to use. Options: image, recaptcha
+    CAPTCHA_TYPE = image
+    ; Enable recaptcha to use Google's recaptcha service
+    ; Go to https://www.google.com/recaptcha/admin to sign up for a key
+    RECAPTCHA_SECRET  =
+    RECAPTCHA_SITEKEY =
     ; Default value for KeepEmailPrivate
     ; Each new user will get the value of this setting copied into their profile
     DEFAULT_KEEP_EMAIL_PRIVATE = false
     ; Default value for AllowCreateOrganization
     ; Every new user will have rights set to create organizations depending on this setting
     DEFAULT_ALLOW_CREATE_ORGANIZATION = true
+    ; Default value for EnableDependencies
+    ; Repositories will use depencies by default depending on this setting
+    DEFAULT_ENABLE_DEPENDENCIES = true
     ; Enable Timetracking
     ENABLE_TIMETRACKING = true
     ; Default value for EnableTimetracking
@@ -347,7 +374,7 @@ data:
     ; if he has set KeepEmailPrivate to true. The user's email will be replaced with a
     ; concatenation of the user name in lower case, "@" and NO_REPLY_ADDRESS.
     NO_REPLY_ADDRESS = noreply.example.org
-    
+
     [webhook]
     ; Hook task queue length, increase if webhook shooting starts hanging
     QUEUE_LENGTH = 1000
@@ -357,7 +384,7 @@ data:
     SKIP_TLS_VERIFY = false
     ; Number of history information in each page
     PAGING_NUM = 10
-    
+
     [mailer]
     ENABLED = false
     ; Buffer length of channel, keep it as it is if you don't know what it is.
@@ -393,7 +420,7 @@ data:
     SENDMAIL_PATH = sendmail
     ; Specify any extra sendmail arguments
     SENDMAIL_ARGS =
-    
+
     [cache]
     ; Either "memory", "redis", or "memcache", default is "memory"
     ADAPTER = memory
@@ -406,7 +433,7 @@ data:
     ; Time to keep items in cache if not used, default is 16 hours.
     ; Setting it to 0 disables caching
     ITEM_TTL = 16h
-    
+
     [session]
     ; Either "memory", "file", or "redis", default is "memory"
     PROVIDER = memory
@@ -426,9 +453,13 @@ data:
     GC_INTERVAL_TIME = 86400
     ; Session life time in seconds, default is 86400 (1 day)
     SESSION_LIFE_TIME = 86400
-    
+
     [picture]
     AVATAR_UPLOAD_PATH = data/avatars
+    ; Max Width and Height of uploaded avatars. This is to limit the amount of RAM
+    ; used when resizing the image.
+    AVATAR_MAX_WIDTH = 4096
+    AVATAR_MAX_HEIGHT = 3072
     ; Chinese users can choose "duoshuo"
     ; or a custom avatar source, like: http://cn.gravatar.com/avatar/
     GRAVATAR_SOURCE = gravatar
@@ -438,7 +469,7 @@ data:
     ; with emails, see https://www.libravatar.org
     ; This value will always be false in offline mode or when Gravatar is disabled.
     ENABLE_FEDERATED_AVATAR = false
-    
+
     [attachment]
     ; Whether attachments are enabled. Defaults to `true`
     ENABLED = true
@@ -450,13 +481,13 @@ data:
     MAX_SIZE = 4
     ; Max number of files per upload. Defaults to 5
     MAX_FILES = 5
-    
+
     [time]
     ; Specifies the format for fully outputted dates. Defaults to RFC1123
     ; Special supported values are ANSIC, UnixDate, RubyDate, RFC822, RFC822Z, RFC850, RFC1123, RFC1123Z, RFC3339, RFC3339Nano, Kitchen, Stamp, StampMilli, StampMicro and StampNano
     ; For more information about the format see http://golang.org/pkg/time/#pkg-constants
     FORMAT =
-    
+
     [log]
     ROOT_PATH =
     ; Either "console", "file", "conn", "smtp" or "database", default is "console"
@@ -466,11 +497,11 @@ data:
     BUFFER_LEN = 10000
     ; Either "Trace", "Debug", "Info", "Warn", "Error", "Critical", default is "Trace"
     LEVEL = Trace
-    
+
     ; For "console" mode only
     [log.console]
     LEVEL =
-    
+
     ; For "file" mode only
     [log.file]
     LEVEL =
@@ -484,7 +515,7 @@ data:
     DAILY_ROTATE = true
     ; delete the log file after n days, default is 7
     MAX_DAYS = 7
-    
+
     ; For "conn" mode only
     [log.conn]
     LEVEL =
@@ -496,7 +527,7 @@ data:
     PROTOCOL = tcp
     ; Host address
     ADDR =
-    
+
     ; For "smtp" mode only
     [log.smtp]
     LEVEL =
@@ -510,7 +541,7 @@ data:
     PASSWD =
     ; Receivers, can be one or more, e.g. 1@example.com,2@example.com
     RECEIVERS =
-    
+
     ; For "database" mode only
     [log.database]
     LEVEL =
@@ -518,17 +549,17 @@ data:
     DRIVER =
     ; Based on xorm, e.g.: root:root@localhost/gitea?charset=utf8
     CONN =
-    
+
     [cron]
     ; Enable running cron tasks periodically.
     ENABLED = true
     ; Run cron tasks when Gitea starts.
     RUN_AT_START = false
-    
+
     ; Update mirrors
     [cron.update_mirrors]
     SCHEDULE = @every 10m
-    
+
     ; Repository health check
     [cron.repo_health_check]
     SCHEDULE = @every 24h
@@ -536,12 +567,12 @@ data:
     ; Arguments for command 'git fsck', e.g. "--unreachable --tags"
     ; see more on http://git-scm.com/docs/git-fsck/1.7.5
     ARGS =
-    
+
     ; Check repository statistics
     [cron.check_repo_stats]
     RUN_AT_START = true
     SCHEDULE = @every 24h
-    
+
     ; Clean up old repository archives
     [cron.archive_cleanup]
     ; Whether to enable the job
@@ -552,7 +583,7 @@ data:
     SCHEDULE = @every 24h
     ; Archives created more than OLDER_THAN ago are subject to deletion
     OLDER_THAN = 24h
-    
+
     ; Synchronize external user data (only LDAP user synchronization is supported)
     [cron.sync_external_users]
     ; Synchronize external user data when starting server (default false)
@@ -562,7 +593,7 @@ data:
     ; Create new users, update existing user data and disable users that are not in external source anymore (default)
     ;   or only create new users if UPDATE_EXISTING is set to false
     UPDATE_EXISTING = true
-    
+
     [git]
     ; Disables highlight of added and removed changes
     DISABLE_DIFF_HIGHLIGHT = false
@@ -575,7 +606,7 @@ data:
     ; Arguments for command 'git gc', e.g. "--aggressive --auto"
     ; see more on http://git-scm.com/docs/git-gc/1.7.5
     GC_ARGS =
-    
+
     ; Operation timeout in seconds
     [git.timeout]
     MIGRATE = 600
@@ -583,23 +614,25 @@ data:
     CLONE = 300
     PULL = 300
     GC = 60
-    
+
     [mirror]
     ; Default interval as a duration between each check
     DEFAULT_INTERVAL = 8h
     ; Min interval as a duration must be > 1m
     MIN_INTERVAL = 10m
-    
+
     [api]
+    ; Enables Swagger. True or false; default is true.
+    ENABLE_SWAGGER = true
     ; Enables /api/swagger, /api/v1/swagger etc. endpoints. True or false; default is true.
     ENABLE_SWAGGER_ENDPOINT = true
     ; Max number of items in a page
     MAX_RESPONSE_ITEMS = 50
-    
+
     [i18n]
     LANGS = en-US,zh-CN,zh-HK,zh-TW,de-DE,fr-FR,nl-NL,lv-LV,ru-RU,uk-UA,ja-JP,es-ES,pt-BR,pl-PL,bg-BG,it-IT,fi-FI,tr-TR,cs-CZ,sr-SP,sv-SE,ko-KR
     NAMES = English,简体中文,繁體中文（香港）,繁體中文（台灣）,Deutsch,français,Nederlands,latviešu,русский,Українська,日本語,español,português do Brasil,polski,български,italiano,suomi,Türkçe,čeština,српски,svenska,한국어
-    
+
     ; Used for datetimepicker
     [i18n.datelang]
     en-US = en
@@ -624,25 +657,26 @@ data:
     sr-SP = sr
     sv-SE = sv
     ko-KR = ko
-    
+
     [U2F]
     ; Two Factor authentication with security keys
     ; https://developers.yubico.com/U2F/App_ID.html
-    APP_ID = %(PROTOCOL)s://%(DOMAIN)s:%(HTTP_PORT)s
+    ;APP_ID = %(PROTOCOL)s://%(DOMAIN)s:%(HTTP_PORT)s/
+
     ; Comma seperated list of truisted facets
-    TRUSTED_FACETS = %(PROTOCOL)s://%(DOMAIN)s:%(HTTP_PORT)s
-    
+    ;TRUSTED_FACETS = %(PROTOCOL)s://%(DOMAIN)s:%(HTTP_PORT)s/
+
     ; Extension mapping to highlight class
     ; e.g. .toml=ini
     [highlight.mapping]
-    
+
     [other]
     SHOW_FOOTER_BRANDING = false
     ; Show version information about Gitea and Go in the footer
     SHOW_FOOTER_VERSION = true
     ; Show template execution time in the footer
     SHOW_FOOTER_TEMPLATE_LOAD_TIME = true
-    
+
     [markup.asciidoc]
     ENABLED = false
     ; List of file extensions that should be rendered by an external command

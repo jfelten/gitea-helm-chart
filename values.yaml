@@ -3,7 +3,7 @@
 ##
 
 images:
-  gitea: "gitea/gitea:1.4.2"
+  gitea: "gitea/gitea:1.6"
   postgres: "postgres:9.6.2"
   imagePullPolicy: IfNotPresent
   ## Specify imagePullSecrets
@@ -12,11 +12,11 @@ images:
   # imagePullSecrets: myregistrykey
 
 ## ingress settings - Optional
-ingress: 
+ingress:
   enabled: false
   useSSL: false
   ## annotations used by the ingress - ex for k8s nginx ingress controller:
-  ingress_annotations: 
+  ingress_annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
@@ -54,7 +54,7 @@ resources:
     requests:
       memory: 256Mi
       cpu: 100m
-     
+
 
 ## Enable persistence using Persistent Volume Claims
 ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
@@ -72,39 +72,49 @@ persistence:
 #  annotations:
 #    "helm.sh/resource-policy": keep
 
+## if you want to mount a volume directly without using a storageClass or pvcs
+#  directGiteaVolumeMount:
+#    glusterfs:
+#      endpoints: "192.168.1.1 192.168.1.2 192.168.1.3"
+#      path: giteaData
+#  directPostgresVolumeMount:
+#    glusterfs:
+#      endpoints: "192.168.1.1 192.168.1.2 192.168.1.3"
+#      path: giteaPostgresData
+
 postgres:
     secret: postgresecrets
     subPath: "postgresql-db"
     dataMountPath: /var/lib/postgresql/data/pgdata
-    
+
     ## Create a database user
     ## Default: postgres
     # postgresUser:
     ## Default: random 10 character string
     # postgresPassword:
-    
+
     ## Inject postgresPassword via a volume mount instead of environment variable
     usePasswordFile: false
-    
+
     ## Use Existing secret instead of creating one
     ## It must have a postgres-password key containing the desired password
     # existingSecret: 'secret'
-    
+
     ## Create a database
     ## Default: the postgres user
     postgresDatabase: gitea
-    
+
     ## Specify initdb arguments, e.g. --data-checksums
     ## ref: https://github.com/docker-library/docs/blob/master/postgres/content.md#postgres_initdb_args
     ## ref: https://www.postgresql.org/docs/current/static/app-initdb.html
     # postgresInitdbArgs:
-    
+
     ## Specify runtime config parameters as a dict, using camelCase, e.g.
     ## {"sharedBuffers": "500MB"}
     ## ref: https://www.postgresql.org/docs/current/static/runtime-config.html
     # postgresConfig:
-    
-    
+
+
 ## Node labels and tolerations for pod assignment
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#taints-and-tolerations-beta-feature
