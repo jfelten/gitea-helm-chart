@@ -55,7 +55,6 @@ resources:
       memory: 500Mi
       cpu: 500m
 
-
 ## Enable persistence using Persistent Volume Claims
 ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
 ## ref:
@@ -71,6 +70,16 @@ persistence:
 ## addtional annotations for hte pvcs  uncommenting below will prevent helm from deleting the pvc when hte chart is deleted
 #  annotations:
 #    "helm.sh/resource-policy": keep
+
+## if you want to mount a volume directly without using a storageClass or pvcs
+#  directGiteaVolumeMount:
+#    glusterfs:
+#      endpoints: "192.168.1.1 192.168.1.2 192.168.1.3"
+#      path: giteaData
+#  directPostgresVolumeMount:
+#    glusterfs:
+#      endpoints: "192.168.1.1 192.168.1.2 192.168.1.3"
+#      path: giteaPostgresData
 
 postgres:
     secret: postgresecrets

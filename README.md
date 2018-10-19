@@ -80,20 +80,44 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Data Management
 
-This chart will use and create optional persistent volume claims for both postgres and gitea data.  By default the data will be deleted upon uninstalling the chart. This is not ideal but can be managed in a couple ways:
+The main deployment contains 2 containers: one for gitea and one for postgres.  Both of these have separate storage requirements and the chart needs 2 sources of persistent storage: one for git data, and one for postgres data.
+
+This chart is used to host code on a bare metal cluster. It was designed with data stability in mind. The maintainability of dynamic storageclass provisioned storage has been not great, so the ability to mount direct volumes without a storage class was added to simplify and increase robustness.  As a consequence there is a lot flexibility in how persistence can be configured.
+
+#### Default persistence behavior
+
+If no persistence is configured it will use emptyDir storage on the node that gets deleted when the chart is deleted.  If configured
+this chart will use and create optional persistent volume claims for both postgres and gitea data.  By default the data will be deleted upon uninstalling the chart. This is not ideal but can be managed in a couple ways:
 
 * prevent helm from deleting the pvcs it creates.  Do this by enabling annotation: helm.sh/resource-policy": keep in the pvc optional annotations
 
-```yaml
+```YAML
 persistence:
   annotations:
     "helm.sh/resource-policy": keep
 ```
 * create a pvc outside the chart and configure the chart to use it.  Do this by setting the persistence existingGiteaClaim and existingPostgresClaim properties.
 
-```yaml
+```YAML
+persistence:
+  enabled: true
  existingGiteaClaim: gitea-gitea
  existingPostgresClaim: gitea-postgres
+```
+
+* use the direct volume mount capabilities of this chart.  The directGiteaVolumeMount and directPostgresVolumeMount values will override volume configuration in the main pod deployment.  The values need to be valid yaml per the kubernetes deployment volume api spec. No storageclass needed!
+
+```YAML
+persistence:
+  enabled: true
+  directGiteaVolumeMount: |-
+    glusterfs:
+      endpoints: glusterfs
+      path: gitea
+  directPostgresVolumeMount: |-
+    glusterfs:
+      endpoints: glusterfs
+      path: gitea_db
 ```
 a trick that can be is used to first set the helm.sh/resource-policy annotation so that the chart generates the pvcs, but doesn't delete them.  Upon next deployment set the existing claim names to the generated values.
 
