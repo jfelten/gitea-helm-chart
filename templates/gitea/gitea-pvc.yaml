@@ -1,4 +1,4 @@
-{{- if and .Values.persistence.enabled (not .Values.persistence.existingGiteaClaim) -}}
+{{- if and .Values.persistence.enabled (not .Values.persistence.existingGiteaClaim) (not .Values.persistence.directGiteaVolumeMount) -}}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
