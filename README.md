@@ -160,7 +160,9 @@ The following table lists the configurable parameters of this chart and their de
 | `resources.postgres.requests.cpu`      | gitea container request cpu          | `100m`                                            |
 | `persistence.enabled`        | Create PVCs to store gitea and postgres data?                | `false`                               |
 | `peristence.existingGiteaClaim`    | Already existing PVC that should be used for gitea data.                       | `nil`                                                      |
-| `peristence.existingPostgresClaim`      |Already existing PVC that should be used for postgres data.                      | `[]`                                                       |
+| `peristence.existingPostgresClaim`      |Already existing PVC that should be used for postgres data.                      | `nil`
+| `peristence.directGiteaVolumeMount`      |Yaml used to mount a volume for git storage directly without pvcs                           | `nil`
+| `peristence.directPostgresVolumeMount`      |Yaml used to mount a volume for git storage directly without pvcs                           | `nil`                                                  |                                                  |
 | `persistence.giteaSize`             | Size of gitea pvc to create                                        | `10Gi`                                                     |
 | `persistence.postgresSize`             | Size of postgres pvc to create | `5Gi`                                                |
 | `persistence.storageClass`         | NStorageClass to use for dynamic provision if not 'default'    | `nil`                                                      |
