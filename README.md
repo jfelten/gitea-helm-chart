@@ -18,11 +18,16 @@ This chart was developed and tested on kubernetes version 1.10, but should work 
 To install the chart with the release name `gitea` in the namespace `tools` with the customized values in custom_values.yaml run:
 
 ```bash
+helm repo add jfelten https://jfelten.github.io/helm-charts/charts
+helm install jfelten/gitea
+
+# or for a more custom install
 $ helm install --values custom_values.yaml --name gitea --namespace tools jfelten/gitea
 ```
-or locally:
-
+or to clone locally and install:
 ```bash
+git clone https://github.com/jfelten/gitea-helm-chart.git
+cd gitea-helm-chart
 $ helm install --name gitea --namespace tools .
 ```
 > **Tip**: You can use the default [values.yaml](values.yaml)
