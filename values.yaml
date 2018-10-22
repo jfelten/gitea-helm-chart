@@ -72,6 +72,16 @@ persistence:
 #  annotations:
 #    "helm.sh/resource-policy": keep
 
+## if you want to mount a volume directly without using a storageClass or pvcs
+#  directGiteaVolumeMount:
+#    glusterfs:
+#      endpoints: "192.168.1.1 192.168.1.2 192.168.1.3"
+#      path: giteaData
+#  directPostgresVolumeMount:
+#    glusterfs:
+#      endpoints: "192.168.1.1 192.168.1.2 192.168.1.3"
+#      path: giteaPostgresData
+
 postgres:
     secret: postgresecrets
     subPath: "postgresql-db"

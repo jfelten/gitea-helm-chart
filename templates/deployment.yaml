@@ -9,6 +9,9 @@ metadata:
     heritage: "{{ .Release.Service }}"
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "fullname" . }}
   template:
     metadata:
       labels:
@@ -17,29 +20,36 @@ spec:
       containers:
       {{ include "postgres" . | indent 6 }}
       {{ include "gitea" . | indent 6 }}
-      initContainers: 
+      initContainers:
       {{ include "init" . | indent 6 }}
       volumes:
       - name: gitea-data
       {{- if .Values.persistence.enabled }}
+        {{- if .Values.persistence.directGiteaVolumeMount }}
+{{ tpl .Values.persistence.directGiteaVolumeMount . | indent 8 }}
+        {{- else }}
         persistentVolumeClaim:
          claimName: {{ .Values.persistence.existingGiteaClaim | default (include "fullname" .) }}
+        {{- end }}
       {{- else }}
         emptyDir: {}
       {{- end }}
       - name: postgres-data
       {{- if .Values.persistence.enabled }}
+        {{- if .Values.persistence.directPostgresVolumeMount }}
+{{ tpl .Values.persistence.directPostgresVolumeMount . | indent 8 }}
+        {{- else }}
         persistentVolumeClaim:
           claimName: {{ .Values.persistence.existingPostgresClaim | default (include "postgresql.fullname" .) }}
+        {{- end }}
       {{- else }}
         emptyDir: {}
       {{- end }}
       - name: gitea-config
         configMap:
           name: {{ template "fullname" . }}
-    
+
       {{- if .Values.imagePullSecrets }}
       imagePullSecrets:
         - name: {{ .Values.imagePullSecrets }}
       {{- end }}
-
