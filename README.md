@@ -5,7 +5,7 @@
 
 This is a kubernetes helm chart for [Gitea](https://gitea.com/) a lightweight github clone.  It deploys a pod containing containers for the Gitea application along with a Postgresql db for storing application state. It can create persistent volume claims if desired, and also an ingress if the kubernetes cluster supports it.
 
-This chart was developed and tested on kubernetes version 1.10, but should work on earlier or later versions.
+This chart was developed and tested on kubernetes version 1.12, but should work on earlier or later versions.
 
 ## Prerequisites
 
