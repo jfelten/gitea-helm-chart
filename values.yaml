@@ -14,13 +14,18 @@ images:
 ## ingress settings - Optional
 ingress:
   enabled: false
-  useSSL: false
   ## annotations used by the ingress - ex for k8s nginx ingress controller:
   ingress_annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+
+  # tls support for the ingress
+  #tls:
+  #  - secretName: <TLS_SECRET>
+  #    hosts:
+  #      - 'git.example.com'
 
 ## chart defaults to using an ingress for http, but change to LoadBalancer if using you cluster supports it
 service:
