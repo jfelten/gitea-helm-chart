@@ -39,7 +39,6 @@ This configuration creates pvcs with the storageclass glusterfs that cannot be d
 ```yaml
 ingress:
   enabled: true
-  useSSL: false
   ## annotations used by the ingress - ex for k8s nginx ingress controller:
   ingress_annotations:
     kubernetes.io/ingress.class: nginx
@@ -48,7 +47,11 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
     nginx.ingress.kubernetes.io/auth-type: basic
     nginx.ingress.kubernetes.io/auth-secret: basic-auth
-    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - lab2"
+    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - my git"
+  tls:
+    - secretName: <TLS_SECRET>
+      hosts:
+        - 'git.example.com'
 
 service:
   http:
@@ -145,7 +148,7 @@ The following table lists the configurable parameters of this chart and their de
 | `images.imagePullPolicy`          | Image pull policy                               | `Always` if `imageTag` is `latest`, else `IfNotPresent`    |
 | `images.imagePullSecrets`         | Image pull secrets                              | `nil`                                                      |
 | `ingress.enable`             | Switch to create ingress for this chart deployment                 | `false`                                                 |
-| `ingress.useSSL`         | Changes default protocol to SSL?                      | false                                       |
+| `ingress.tls`         | The presence of this value changes default git protocol from http to https and configures tls secret and host name - see values.yaml example       | `nil`                                       |
 | `ingress.ingress_annotations`          | annotations used by the ingress | `nil`                                                    |
 | `service.http.serviceType`         | type of kubernetes services used for http i.e. ClusterIP, NodePort or LoadBalancer                | `ClusterIP`                                                 |
 | `service.http.port`       | http port for web traffic                               | `3000`                                                      |

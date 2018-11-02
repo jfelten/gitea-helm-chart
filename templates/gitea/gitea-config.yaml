@@ -124,20 +124,23 @@ data:
 
     [server]
     ; The protocol the server listens on. One of 'http', 'https', 'unix' or 'fcgi'.
-    {{- if .Values.ingress.useSSL  }}
-    PROTOCOL = https
-    {{- else }}
+
+    ; PROTOCOL hardcoded to http since tls is delegated to ingress
     PROTOCOL = http
-    {{- end }}
     {{- if .Values.service.http.externalHost }}
     DOMAIN = {{ .Values.service.http.externalHost }}
     {{- else }}
     DOMAIN = {{ template "fullname" . }}-http.{{ .Release.Namespace }}.svc.cluster.local
     {{- end -}}
+    {{ if .Values.ingress.tls }}
+    {{- $proto := set . "proto" "https" }}
+    {{- else -}}
+    {{- $proto := set . "proto" "http" }}
+    {{- end -}}
     {{- if and .Values.service.http.externalHost ( .Values.service.http.externalPort ) }}
-    ROOT_URL = %(PROTOCOL)s://{{ .Values.service.http.externalHost }}:{{ .Values.service.http.externalPort  }}/
+    ROOT_URL = {{ .proto }}://{{ .Values.service.http.externalHost }}:{{ .Values.service.http.externalPort  }}/
     {{- else if .Values.service.http.externalHost }}
-    ROOT_URL = %(PROTOCOL)s://{{ .Values.service.http.externalHost }}/
+    ROOT_URL = {{ .proto }}://{{ .Values.service.http.externalHost }}/
     {{- else }}
     ROOT_URL = %(PROTOCOL)s://%(DOMAIN)s:%(HTTP_PORT)s/
     {{- end -}}
