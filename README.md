@@ -3,7 +3,9 @@
 
 ## Introduction
 
-This is a kubernetes helm chart for [Gitea](https://gitea.com/) a lightweight github clone.  It deploys a pod containing containers for the Gitea application along with a Postgresql db for storing application state. It can create persistent volume claims if desired, and also an ingress if the kubernetes cluster supports it.
+This chart creates a pod consisting of [gitea](https://gitea.com/), postgres and memcached containers.  Each pod performs the role of application, data persistence, and cache. All containers are rolled into a single pod vs using dependent charts for ease of maintenance, easier packaging, and simplicity.  Neither postgres nor memcache is exposed as a service and only usable within the gitea pod.
+
+The chart can create persistent volume claims if desired cluster supports it. The chart can also mount storage directly and can be sued without a storage class.  An ingress can be created provided an ingress controller is installed on the cluster.
 
 This chart was developed and tested on kubernetes version 1.12, but should work on earlier or later versions.
 
@@ -147,6 +149,9 @@ The following table lists the configurable parameters of this chart and their de
 | `images.postgres`                 | `postgres` image                            | `postgres:9.6.2`                                                    |
 | `images.imagePullPolicy`          | Image pull policy                               | `Always` if `imageTag` is `latest`, else `IfNotPresent`    |
 | `images.imagePullSecrets`         | Image pull secrets                              | `nil`                                                      |
+| `memcached.maxItemMemory`             | memcached maxItemMemory parameter                 | `64`                                                 |
+| `memcached.verbosity`             | memcached logging verbosity parameter                 | `v`                                                 |
+`memcached.extendedOptions`             | memcached extendedOptions parameter                 | `modern`                                                 |
 | `ingress.enable`             | Switch to create ingress for this chart deployment                 | `false`                                                 |
 | `ingress.tls`         | The presence of this value changes default git protocol from http to https and configures tls secret and host name - see values.yaml example       | `nil`                                       |
 | `ingress.ingress_annotations`          | annotations used by the ingress | `nil`                                                    |
@@ -180,3 +185,6 @@ The following table lists the configurable parameters of this chart and their de
 | `postgres.dataMountPath`             | Path for Postgres data storage                  | `nil`                                                         |
 | `affinity`                 | Affinity settings for pod assignment            | {}                                                         |
 | `tolerations`              | Toleration labels for pod assignment            | []
+
+## Performance
+We have observed that gitea performance is heavily file system dependent. If high performance is required be sure to use fast storage. Otherwise tune each container resource settings to suit your needs.
