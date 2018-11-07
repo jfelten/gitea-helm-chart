@@ -5,7 +5,7 @@
 
 This chart creates a pod consisting of [gitea](https://gitea.com/), postgres and memcached containers.  Each pod performs the role of application, data persistence, and cache. All containers are rolled into a single pod vs using dependent charts for ease of maintenance, easier packaging, and simplicity.  Neither postgres nor memcache is exposed as a service and only usable within the gitea pod.
 
-The chart can create persistent volume claims if desired cluster supports it. The chart can also mount storage directly and can be sued without a storage class.  An ingress can be created provided an ingress controller is installed on the cluster.
+The chart can create persistent volume claims if desired cluster supports it. The chart can also mount storage directly and can be used without a storage class.  An ingress can be created provided an ingress controller is installed on the cluster.
 
 This chart was developed and tested on kubernetes version 1.12, but should work on earlier or later versions.
 
@@ -111,8 +111,8 @@ persistence:
 ```YAML
 persistence:
   enabled: true
- existingGiteaClaim: gitea-gitea
- existingPostgresClaim: gitea-postgres
+  existingGiteaClaim: gitea-gitea
+  existingPostgresClaim: gitea-postgres
 ```
 
 * use the direct volume mount capabilities of this chart.  The directGiteaVolumeMount and directPostgresVolumeMount values will override volume configuration in the main pod deployment.  The values need to be valid yaml per the kubernetes deployment volume api spec. No storageclass needed!
@@ -187,4 +187,4 @@ The following table lists the configurable parameters of this chart and their de
 | `tolerations`              | Toleration labels for pod assignment            | []
 
 ## Performance
-We have observed that gitea performance is heavily file system dependent. If high performance is required be sure to use fast storage. Otherwise tune each container resource settings to suit your needs.
+We have observed that gitea performance is heavily file system dependent. If high performance is required be sure to use fast storage. Otherwise tune container resource settings to suit your needs.
