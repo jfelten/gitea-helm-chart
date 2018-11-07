@@ -20,6 +20,7 @@ spec:
       containers:
       {{ include "postgres" . | indent 6 }}
       {{ include "gitea" . | indent 6 }}
+      {{ include "memcached" . | indent 6 }}
       initContainers:
       {{ include "init" . | indent 6 }}
       volumes:
