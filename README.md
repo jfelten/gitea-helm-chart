@@ -185,6 +185,19 @@ The following table lists the configurable parameters of this chart and their de
 | `postgres.dataMountPath`             | Path for Postgres data storage                  | `nil`                                                         |
 | `affinity`                 | Affinity settings for pod assignment            | {}                                                         |
 | `tolerations`              | Toleration labels for pod assignment            | []
+| `config.secretKey` | gitea config SECRET_KEY | set to a random password
+| `config.disableInstaller` | gitea config INSTALL_LOCK, do not require manual install step | `false`
 
 ## Performance
+
 We have observed that gitea performance is heavily file system dependent. If high performance is required be sure to use fast storage. Otherwise tune container resource settings to suit your needs.
+
+## Initial install configuration
+
+With default configuration gitea will require first user to complete `install` procedure.
+In order to skip this step after installation, set config.disableInstaller to true
+
+```yaml
+config:
+  disableInstaller: true
+```

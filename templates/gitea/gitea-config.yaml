@@ -282,7 +282,13 @@ data:
     ; Whether the installer is disabled
     INSTALL_LOCK = {{ .Values.config.disableInstaller }}
     ; !!CHANGE THIS TO KEEP YOUR USER DATA SAFE!!
+    {{ if .Values.config.secretKey }}
     SECRET_KEY = {{ .Values.config.secretKey }}
+    {{ else }}
+    SECRET_KEY = {{ randAlphaNum 64 | quote }}
+    {{ end }}
+
+
     ; How long to remember that an user is logged in before requiring relogin (in days)
     LOGIN_REMEMBER_DAYS = 7
     COOKIE_USERNAME = gitea_awesome
