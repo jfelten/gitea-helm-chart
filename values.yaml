@@ -140,3 +140,8 @@ affinity: {}
 ## Annotations for the deployment and nodes.
 deploymentAnnotations: {}
 podAnnotations: {}
+
+## In order to disable initial install screen you must have secretKey and disableInstaller=true
+config:
+  secretKey: defaultsecretkeyyouneedtooverride
+  disableInstaller: false
