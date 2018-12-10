@@ -1,46 +1,60 @@
 # Gitea Helm chart
-[Gitea](https://gitea.com/) is a lightweight github clone.  This is for those who wish to self host their own git repos on kubernetes.
+[Gitea](https://gitea.com/) is a lightweight github clone.  This is for those who wish to self host theri own git repos on kubernetes.
 
 ## Introduction
 
-This chart creates a pod consisting of [gitea](https://gitea.com/), postgres and memcached containers.  Each pod performs the role of application, data persistence, and cache. All containers are rolled into a single pod vs using dependent charts for ease of maintenance, easier packaging, and simplicity.  Neither postgres nor memcache is exposed as a service and only usable within the gitea pod.
+This is a kubernetes helm chart for [Gitea](https://gitea.com/) a lightweight github clone.  It deploys a pod containing containers for the Gitea application along with a Postgresql db for storing application state. It can create peristent volume claims if desired, and also an ingress if the kubernetes cluster supports it.
 
-The chart can create persistent volume claims if desired cluster supports it. The chart can also mount storage directly and can be used without a storage class.  An ingress can be created provided an ingress controller is installed on the cluster.
-
-This chart was developed and tested on kubernetes version 1.12, but should work on earlier or later versions.
+This chart was developed and tested on kubernetes version 1.10, but should work on earlier or later versions.
 
 ## Prerequisites
 
 - A kubernetes cluster ( most recent release recommended)
 - helm client and tiller installed on the cluster
 - Please ensure that nodepools have enough resources to run both a web application and database
+- An external database if not using the in pod database
 
 ## Installing the Chart
 
 To install the chart with the release name `gitea` in the namespace `tools` with the customized values in custom_values.yaml run:
 
 ```bash
-helm repo add jfelten https://jfelten.github.io/helm-charts/charts
-helm install jfelten/gitea
-
-# or for a more custom install
-$ helm install --values custom_values.yaml --name gitea --namespace tools jfelten/gitea
+$ helm install -- values custom_values.yaml --name gitea --namespace gittea jfelten/gitea
 ```
-or to clone locally and install:
+or locally:
+
 ```bash
-git clone https://github.com/jfelten/gitea-helm-chart.git
-cd gitea-helm-chart
-$ helm install --name gitea --namespace tools .
+$ helm install --name gitea --namewspace tools .
 ```
 > **Tip**: You can use the default [values.yaml](values.yaml)
 >
+
+### Database config in pod vs external db
+By default the chart will spin up a postgres contain er inside the pod.  It can also work with external databases.  To disable the in pod database and use and external one use the following values:
+
+```yaml
+dbType: "postgres"
+useInPodPostgres: true
+
+#Connect to an external database
+ externalDB:
+  dbUser: "postgres"
+   dbPassword: "<MY_PASSWORD>"
+   dbHost: "db-service-name.namespace.svc.cluster.local" # or some external host
+   dbPort: "5432"
+   dbDatabase: "gitea"
+```
+
+This chart has only been tested using a postgres database.  It is theoretically possible to work with others that gitea supports, but no testing has been done.  Pull Requests to support or confirmation of other database connectivity would be much appreciated.
+
 ### Example custom_values.yaml configs
 
-This configuration creates pvcs with the storageclass glusterfs that cannot be deleted by helm, a kubernetes nginx ingress that serves the web application on external dns name git.example.com:8880 and exposes ssh through a NodePort that is exposed externally on a router using port 8022. The external DNS name for ssh is git.example.com.
+This configuration creates pvcs with the storageclass glusterfs that cannot be deleted by helm, a kubernetes nginx ingress that serves the web applcation on external dns name git.example.com:8880 and exposes ssh through a NodePort that is exposed externally on a router using port 8022. The external DNS name for ssh is git.example.com.
 
 ```yaml
 ingress:
   enabled: true
+  useSSL: false
   ## annotations used by the ingress - ex for k8s nginx ingress controller:
   ingress_annotations:
     kubernetes.io/ingress.class: nginx
@@ -49,11 +63,7 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
     nginx.ingress.kubernetes.io/auth-type: basic
     nginx.ingress.kubernetes.io/auth-secret: basic-auth
-    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - my git"
-  tls:
-    - secretName: <TLS_SECRET>
-      hosts:
-        - 'git.example.com'
+    nginx.ingress.kubernetes.io/auth-realm: "Authentication Required - lab2"
 
 service:
   http:
@@ -78,6 +88,7 @@ persistence:
     "helm.sh/resource-policy": keep
 ```
 
+
 ## Uninstalling the Chart
 
 To uninstall/delete the `gitea` deployment:
@@ -90,50 +101,26 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Data Management
 
-The main deployment contains 2 containers: one for gitea and one for postgres.  Both of these have separate storage requirements and the chart needs 2 sources of persistent storage: one for git data, and one for postgres data.
-
-This chart is used to host code on a bare metal cluster. It was designed with data stability in mind. The maintainability of dynamic storageclass provisioned storage has been not great, so the ability to mount direct volumes without a storage class was added to simplify and increase robustness.  As a consequence there is a lot flexibility in how persistence can be configured.
-
-#### Default persistence behavior
-
-If no persistence is configured it will use emptyDir storage on the node that gets deleted when the chart is deleted.  If configured
-this chart will use and create optional persistent volume claims for both postgres and gitea data.  By default the data will be deleted upon uninstalling the chart. This is not ideal but can be managed in a couple ways:
+This chart will use and create optional persistent volume claims for both postgres (if using in pod db) and gitea data.  By default the data will be deleted upon uninstalling the chart. This is not ideal but can be managed in a couple ways:
 
 * prevent helm from deleting the pvcs it creates.  Do this by enabling annotation: helm.sh/resource-policy": keep in the pvc optional annotations
 
-```YAML
+```yaml
 persistence:
   annotations:
     "helm.sh/resource-policy": keep
 ```
 * create a pvc outside the chart and configure the chart to use it.  Do this by setting the persistence existingGiteaClaim and existingPostgresClaim properties.
 
-```YAML
-persistence:
-  enabled: true
-  existingGiteaClaim: gitea-gitea
-  existingPostgresClaim: gitea-postgres
+```yaml
+ existingGiteaClaim: gitea-gitea
+ existingPostgresClaim: gitea-postgres
 ```
-
-* use the direct volume mount capabilities of this chart.  The directGiteaVolumeMount and directPostgresVolumeMount values will override volume configuration in the main pod deployment.  The values need to be valid yaml per the kubernetes deployment volume api spec. No storageclass needed!
-
-```YAML
-persistence:
-  enabled: true
-  directGiteaVolumeMount: |-
-    glusterfs:
-      endpoints: glusterfs
-      path: gitea
-  directPostgresVolumeMount: |-
-    glusterfs:
-      endpoints: glusterfs
-      path: gitea_db
-```
-a trick that can be is used to first set the helm.sh/resource-policy annotation so that the chart generates the pvcs, but doesn't delete them.  Upon next deployment set the existing claim names to the generated values.
+a trick that can be is used to first set the helm.sh/resource-policy annotation so that the chart generates the pvcs, but doesn't delete them.  Upon next deplyment set the exsiting claim names to the generated values.
 
 ## Ingress And External Host/Ports
 
-Gitea requires ports to be exposed for both web and ssh traffic.  The chart is flexible and allow a combination of either ingresses, loadbalancer, or nodeport services.
+Gitea requires ports to be exposed for both web and ssh traffic.  The chart is flexible and allow a combination of either ingresses, loadblancer, or nodeport services.
 
 To expose the web application this chart will generate an ingress using the ingress controller of choice if specified. If an ingress is enabled services.http.externalHost must be specified. To expose SSH services it relies on either a LoadBalancer or NodePort.
 
@@ -145,15 +132,12 @@ The following table lists the configurable parameters of this chart and their de
 
 | Parameter                  | Description                                     | Default                                                    |
 | -----------------------    | ---------------------------------------------   | ---------------------------------------------------------- |
-| `images.gitea`                    | `gitea` image                     | `gitea/gitea:1.6`                                                 |
+| `images.gitea`                    | `gitea` image                     | `gitea/gitea:1.4.2`                                                 |
 | `images.postgres`                 | `postgres` image                            | `postgres:9.6.2`                                                    |
 | `images.imagePullPolicy`          | Image pull policy                               | `Always` if `imageTag` is `latest`, else `IfNotPresent`    |
 | `images.imagePullSecrets`         | Image pull secrets                              | `nil`                                                      |
-| `memcached.maxItemMemory`             | memcached maxItemMemory parameter                 | `64`                                                 |
-| `memcached.verbosity`             | memcached logging verbosity parameter                 | `v`                                                 |
-`memcached.extendedOptions`             | memcached extendedOptions parameter                 | `modern`                                                 |
 | `ingress.enable`             | Switch to create ingress for this chart deployment                 | `false`                                                 |
-| `ingress.tls`         | The presence of this value changes default git protocol from http to https and configures tls secret and host name - see values.yaml example       | `nil`                                       |
+| `ingress.useSSL`         | Changes default protocol to SSL?                      | false                                       |
 | `ingress.ingress_annotations`          | annotations used by the ingress | `nil`                                                    |
 | `service.http.serviceType`         | type of kubernetes services used for http i.e. ClusterIP, NodePort or LoadBalancer                | `ClusterIP`                                                 |
 | `service.http.port`       | http port for web traffic                               | `3000`                                                      |
@@ -173,31 +157,20 @@ The following table lists the configurable parameters of this chart and their de
 | `resources.postgres.requests.cpu`      | gitea container request cpu          | `100m`                                            |
 | `persistence.enabled`        | Create PVCs to store gitea and postgres data?                | `false`                               |
 | `peristence.existingGiteaClaim`    | Already existing PVC that should be used for gitea data.                       | `nil`                                                      |
-| `peristence.existingPostgresClaim`      |Already existing PVC that should be used for postgres data.                      | `nil`
-| `peristence.directGiteaVolumeMount`      |Yaml used to mount a volume for git storage directly without pvcs                           | `nil`
-| `peristence.directPostgresVolumeMount`      |Yaml used to mount a volume for git storage directly without pvcs                           | `nil`                                                  |                                                  |
+| `peristence.existingPostgresClaim`      |Already existing PVC that should be used for postgres data.                      | `[]`                                                       |
 | `persistence.giteaSize`             | Size of gitea pvc to create                                        | `10Gi`                                                     |
 | `persistence.postgresSize`             | Size of postgres pvc to create | `5Gi`                                                |
 | `persistence.storageClass`         | NStorageClass to use for dynamic provision if not 'default'    | `nil`                                                      |
 | `persistence.annotations`    | Annotations to set on created PVCs                           | `nil`                                                    |
-| `postgres.secret` | Generated Secret to store postgres passwords   | `postgressecrets`                                                     |
-| `postgres.subPath`             | Subpath for Postgres data storage                  | `nil`                                                         |
-| `postgres.dataMountPath`             | Path for Postgres data storage                  | `nil`                                                         |
+| `dbType`             | type of database storage                  | ` "postgres"`                                                         |
+| `useInPodPostgres`             | create a postgres pos for db storage -must use externalDB if false                 | ` true`                                                         |
+| `externalDB.dbUser`             | external db user                  | ` unset`                                                         |
+`externalDB.dbPassword`             | external db password                  | ` unset`                                                         |
+`externalDB.dbHost`             | external db host                  | ` unset`                                                         |
+`externalDB.dbPort`             | external db port                  | ` unset`                                                         |
+`externalDB.dbDatabase`             | external db database name                  | ` unset`                                                         |
+| `inPodPostgres.secret` | Generated Secret to store postgres passwords   | `postgressecrets`                                                     |
+| `inPodPostgres.subPath`             | Subpath for Postgres data storage                  | `nil`                                                         |
+| `inPodPostgres.dataMountPath`             | Path for Postgres data storage                  | `nil`                                                         |
 | `affinity`                 | Affinity settings for pod assignment            | {}                                                         |
-| `tolerations`              | Toleration labels for pod assignment            | []
-| `config.secretKey` | gitea config SECRET_KEY | set to a random password
-| `config.disableInstaller` | gitea config INSTALL_LOCK, do not require manual install step | `false`
-
-## Performance
-
-We have observed that gitea performance is heavily file system dependent. If high performance is required be sure to use fast storage. Otherwise tune container resource settings to suit your needs.
-
-## Initial install configuration
-
-With default configuration gitea will require first user to complete `install` procedure.
-In order to skip this step after installation, set config.disableInstaller to true
-
-```yaml
-config:
-  disableInstaller: true
-```
+| `tolerations`              | Toleration labels for pod assignment            | []                                                         

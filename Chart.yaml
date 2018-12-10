@@ -1,5 +1,6 @@
 name: gitea
-version: 1.6.0
+version: 1.6.1
+appVersion: 1.6.1
 description: Git with a cup of tea
 icon: https://docs.gitea.io/images/gitea.png
 keywords:
@@ -7,6 +8,8 @@ keywords:
 - issue tracker
 - code review
 - wiki
+- gitea
+- gogs
 sources:
 - https://github.com/go-gitea/gitea
 - https://hub.docker.com/r/gitea/gitea/

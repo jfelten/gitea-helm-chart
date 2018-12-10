@@ -6,27 +6,27 @@ Create helm partial for postgres server
   image: "{{ .Values.images.postgres }}"
   imagePullPolicy: {{ default "" .Values.images.imagePullPolicy | quote }}
   args:
-    {{- range $key, $value := default dict .Values.postgres.postgresConfig }}
+    {{- range $key, $value := default dict .Values.inPodPostgres.postgresConfig }}
     - -c
     - '{{ $key | snakecase }}={{ $value }}'
     {{- end }}
   env:
   - name: POSTGRES_USER
-    value: {{ default "postgres" .Values.postgres.postgresUser | quote }}
+    value: {{ default "postgres" .Values.inPodPostgres.postgresUser | quote }}
   # Required for pg_isready in the health probes.
   - name: PGUSER
-    value: {{ default "postgres" .Values.postgres.postgresUser | quote }}
+    value: {{ default "postgres" .Values.inPodPostgres.postgresUser | quote }}
   - name: POSTGRES_DB
-    value: {{ default "" .Values.postgres.postgresDatabase | quote }}
+    value: {{ default "" .Values.inPodPostgres.postgresDatabase | quote }}
   - name: POSTGRES_INITDB_ARGS
-    value: {{ default "" .Values.postgres.postgresInitdbArgs | quote }}
+    value: {{ default "" .Values.inPodPostgres.postgresInitdbArgs | quote }}
   - name: PGDATA
     value: /var/lib/postgresql/data/pgdata
   - name: POSTGRES_PASSWORD
     valueFrom:
       secretKeyRef:
-        name: {{ template "postgresql.fullname" . }}
-        key: postgres-password
+        name: {{ template "db.fullname" . }}
+        key: dbPassword
   - name: POD_IP
     valueFrom: { fieldRef: { fieldPath: status.podIP } }
   ports:
@@ -54,8 +54,8 @@ Create helm partial for postgres server
 {{ toYaml .Values.resources.postgres | indent 10 }}
   volumeMounts:
   - name: postgres-data
-    mountPath: {{ .Values.postgres.dataMountPath }}
-    subPath: {{ .Values.postgres.subPath }}
+    mountPath: {{ .Values.inPodPostgres.dataMountPath }}
+    subPath: {{ .Values.inPodPostgres.subPath }}
   {{- if .Values.usePasswordFile }}
   - name: password-file
     mountPath: /conf

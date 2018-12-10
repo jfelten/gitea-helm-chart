@@ -18,11 +18,14 @@ spec:
         app: {{ template "fullname" . }}
     spec:
       containers:
+      {{- if .Values.useInPodPostgres }}
       {{ include "postgres" . | indent 6 }}
+      {{- end -}}
       {{ include "gitea" . | indent 6 }}
       {{ include "memcached" . | indent 6 }}
       initContainers:
       {{ include "init" . | indent 6 }}
+      {{ include "initPostgres" . | indent 6 }}
       volumes:
       - name: gitea-data
       {{- if .Values.persistence.enabled }}

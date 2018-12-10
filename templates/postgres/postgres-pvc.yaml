@@ -1,4 +1,4 @@
-{{- if and .Values.persistence.enabled (not .Values.persistence.existingPostgresClaim) (not .Values.persistence.directPostgresVolumeMount) -}}
+{{- if and .Values.persistence.enabled .Values.useInPodPostgres (not .Values.persistence.existingPostgresClaim) (not .Values.persistence.directPostgresVolumeMount) -}}
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
