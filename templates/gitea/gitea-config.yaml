@@ -463,7 +463,7 @@ data:
     ; For "redis" and "memcache", connection host address
     ;redis: network=tcp,addr=:6379,password=macaron,db=0,pool_size=100,idle_timeout=180
     memcache: `127.0.0.1:11211`
-    HOST =
+    HOST = 127.0.0.1:11211
     ; Time to keep items in cache if not used, default is 16 hours.
     ; Setting it to 0 disables caching
     ITEM_TTL = 16h
