@@ -16,7 +16,6 @@ Create helm partial for gitea server
       mkdir -p /datatmp/gitea/conf
       #if [ ! -f /datatmp/gitea/conf/app.ini ]; then
         sed "s/POSTGRES_PASSWORD/${POSTGRES_PASSWORD}/g" < /etc/gitea/app.ini > /datatmp/gitea/conf/app.ini
-
       #fi
   command: ["/bin/sh",'-c', *script]
   volumeMounts:

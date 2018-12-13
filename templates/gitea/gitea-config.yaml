@@ -259,7 +259,7 @@ data:
     [database]
     {{ if .Values.externalDB }}
     ; Either "mysql", "postgres", "mssql" or "sqlite3", it's your choice
-    DB_TYPE = {{ .Values.externalDB.dbType }}
+    DB_TYPE = {{ .Values.dbType }}
     HOST = {{ .Values.externalDB.dbHost }}:{{ .Values.externalDB.dbPort }}
     NAME = {{ .Values.externalDB.dbDatabase }}
     USER = {{ .Values.externalDB.dbUser }}
@@ -462,7 +462,6 @@ data:
     INTERVAL = 60
     ; For "redis" and "memcache", connection host address
     ;redis: network=tcp,addr=:6379,password=macaron,db=0,pool_size=100,idle_timeout=180
-    memcache: `127.0.0.1:11211`
     HOST = 127.0.0.1:11211
     ; Time to keep items in cache if not used, default is 16 hours.
     ; Setting it to 0 disables caching
