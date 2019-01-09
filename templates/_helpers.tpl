@@ -5,6 +5,7 @@ Expand the name of the chart.
 {{- define "name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+
 {{- define "postgresql.name" -}}
 {{- default .Chart.Name "postgres" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
@@ -25,5 +26,10 @@ If release name contains chart name it will be used as a full name.
 */}}
 {{- define "postgresql.fullname" -}}
 {{- $name := default .Chart.Name "postgres" -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 24 -}}
+{{- end -}}
+
+{{- define "db.fullname" -}}
+{{- $name := default .Chart.Name "db" -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 24 -}}
 {{- end -}}

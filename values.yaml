@@ -3,10 +3,10 @@
 ##
 
 images:
-  gitea: "gitea/gitea:1.6"
-  postgres: "postgres:9.6.2"
+  gitea: "gitea/gitea:1.6.1"
+  postgres: "postgres:11"
   memcached: "memcached:1.5.6-alpine"
-  imagePullPolicy: IfNotPresent
+  imagePullPolicy: Always
   ## Specify imagePullSecrets
   ## ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
   ##
@@ -28,7 +28,7 @@ ingress:
   #  nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
   #  nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
 
-  # tls support for the ingress
+  ##tls support for the ingress
   #tls:
   #  - secretName: <TLS_SECRET>
   #    hosts:
@@ -58,18 +58,23 @@ resources:
   gitea:
     requests:
       memory: 500Mi
-      cpu: 500m
+      cpu: 1000m
     limits:
       memory: 2Gi
       cpu: 1
   postgres:
     requests:
-      memory: 500Mi
-      cpu: 500m
+      memory: 200Mi
+      cpu: 200m
+    limits:
+      memory: 2Gi
+      cpu: 1
   memcached:
     requests:
       memory: 64Mi
       cpu: 50m
+
+
 
 ## Enable persistence using Persistent Volume Claims
 ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
@@ -97,7 +102,19 @@ persistence:
 #      endpoints: "192.168.1.1 192.168.1.2 192.168.1.3"
 #      path: giteaPostgresData
 
-postgres:
+#Connect to an external database
+# externalDB:
+#   dbUser: "postgres"
+#   dbPassword: "<MY_PASSWORD>"
+#   dbHost: "service-name.namespace.svc.cluster.local" # or some external host
+#   dbPort: "5432"
+#   dbDatabase: "gitea"
+
+# valid types: postgres, mysql, mssql, sqllite
+dbType: "postgres"
+useInPodPostgres: true
+
+inPodPostgres:
     secret: postgresecrets
     subPath: "postgresql-db"
     dataMountPath: /var/lib/postgresql/data/pgdata

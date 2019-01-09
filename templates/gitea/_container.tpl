@@ -9,8 +9,8 @@ Create helm partial for gitea server
   - name: POSTGRES_PASSWORD
     valueFrom:
       secretKeyRef:
-        name: {{ template "postgresql.fullname" . }}
-        key: postgres-password
+        name: {{ template "db.fullname" . }}
+        key: dbPassword
   ports:
   - name: ssh
     containerPort: {{ .Values.service.ssh.port  }}
