@@ -1,0 +1,63 @@
+kind: pipeline
+name: helm-check
+
+steps:
+- name: init
+  image: keyporttech/helm-builder:2.12.1-1
+  environment:
+    KUBECONFIG:
+      from_secret: KUBECONFIG_ENC
+    CHART_NAME: drone
+  volumes:
+  - name: kubernetes-secrets
+    path: /etc/kubernetes
+  commands:
+  - "echo $KUBECONFIG | base64 -d > /etc/kubernetes/config"
+  - "ln -s $(pwd) /etc/kubernetes/$CHART_NAME"
+  - echo "${DRONE_REPO_NAME}-$(openssl rand -hex 12)" > /etc/kubernetes/chartname
+  ## delete existing deployment if exists
+  - "helm delete $(cat /etc/kubernetes/chartname) --purge --kubeconfig /etc/kubernetes/config | :"
+
+- name: "helm lint and dry run"
+  image: keyporttech/helm-builder:2.12.1-1
+  environment:
+    CHART_NAME: drone
+  volumes:
+  - name: kubernetes-secrets
+    path: /etc/kubernetes
+  commands:
+  - "helm version --kubeconfig /etc/kubernetes/config"
+  - "helm lint /etc/kubernetes/$CHART_NAME --kubeconfig /etc/kubernetes/config"
+  - "helm install /etc/kubernetes/$CHART_NAME -n  $(cat /etc/kubernetes/chartname) --namespace helm-test --dry-run --kubeconfig /etc/kubernetes/config"
+
+- name: "verify install/update and test"
+  image: keyporttech/helm-builder:2.12.1
+  environment:
+    CHART_NAME: drone
+  volumes:
+  - name: kubernetes-secrets
+    path: /etc/kubernetes
+  commands:
+  - "helm install . -n  $(cat /etc/kubernetes/chartname) --kubeconfig /etc/kubernetes/config"
+  - "helm test  $(cat /etc/kubernetes/chartname) --cleanup --kubeconfig /etc/kubernetes/config"
+  - "helm upgrade $(cat /etc/kubernetes/chartname) . --kubeconfig /etc/kubernetes/config"
+
+- name: "cleanup"
+  image: keyporttech/helm-builder:2.12.1
+  environment:
+    CHART_NAME: drone
+  volumes:
+  - name: kubernetes-secrets
+    path: /etc/kubernetes
+  commands:
+  - "helm delete $(cat /etc/kubernetes/chartname) --purge --kubeconfig /etc/kubernetes/config"
+
+# - name: publish
+#   image: keyporttech/chart_publisher
+#   environment:
+#     CHART_NAME: drone_helm_chart
+#   commands:
+#   - publish
+volumes:
+- name: kubernetes-secrets
+  temp: {}
