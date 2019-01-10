@@ -54,11 +54,13 @@ steps:
 
 - name: "publish to jfelten chart repo"
   image: keyporttech/helm-builder:2.12.1
-  environment:
-    CHART_NAME: drone_helm_chart
   commands:
   - "git clone https://github.com/jfelten/helm-charts"
   - "cd helm-charts/scripts"
   - "./createRepo.sh"
   - "git add *"
   - 'git commit -m "update gitea helm chart"'
+  
+volumes:
+- name: kubernetes-secrets
+  temp: {}
