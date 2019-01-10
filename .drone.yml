@@ -7,7 +7,7 @@ steps:
   environment:
     KUBECONFIG:
       from_secret: KUBECONFIG_ENC
-    CHART_NAME: drone
+    CHART_NAME: gitea
   volumes:
   - name: kubernetes-secrets
     path: /etc/kubernetes
@@ -21,7 +21,7 @@ steps:
 - name: "helm lint and dry run"
   image: keyporttech/helm-builder:2.12.1-1
   environment:
-    CHART_NAME: drone
+    CHART_NAME: gitea
   volumes:
   - name: kubernetes-secrets
     path: /etc/kubernetes
@@ -33,7 +33,7 @@ steps:
 - name: "verify install/update and test"
   image: keyporttech/helm-builder:2.12.1
   environment:
-    CHART_NAME: drone
+    CHART_NAME: gitea
   volumes:
   - name: kubernetes-secrets
     path: /etc/kubernetes
@@ -45,7 +45,7 @@ steps:
 - name: "cleanup"
   image: keyporttech/helm-builder:2.12.1
   environment:
-    CHART_NAME: drone
+    CHART_NAME: gitea
   volumes:
   - name: kubernetes-secrets
     path: /etc/kubernetes
