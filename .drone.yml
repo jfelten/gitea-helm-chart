@@ -52,12 +52,13 @@ steps:
   commands:
   - "helm delete $(cat /etc/kubernetes/chartname) --purge --kubeconfig /etc/kubernetes/config"
 
-# - name: publish
-#   image: keyporttech/chart_publisher
-#   environment:
-#     CHART_NAME: drone_helm_chart
-#   commands:
-#   - publish
-volumes:
-- name: kubernetes-secrets
-  temp: {}
+- name: "publish to jfelten chart repo"
+  image: keyporttech/helm-builder:2.12.1
+  environment:
+    CHART_NAME: drone_helm_chart
+  commands:
+  - "git clone https://github.com/jfelten/helm-charts"
+  - "cd helm-charts/scripts"
+  - "./createRepo.sh"
+  - "git add *"
+  - 'git commit -m "update gitea helm chart"'
