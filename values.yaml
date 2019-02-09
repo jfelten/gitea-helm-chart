@@ -162,3 +162,4 @@ podAnnotations: {}
 config:
 #  secretKey: define_your_secret
   disableInstaller: false
+  offlineMode: false

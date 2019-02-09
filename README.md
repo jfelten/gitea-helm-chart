@@ -174,3 +174,4 @@ The following table lists the configurable parameters of this chart and their de
 | `inPodPostgres.dataMountPath`             | Path for Postgres data storage                  | `nil`                                                         |
 | `affinity`                 | Affinity settings for pod assignment            | {}                                                         |
 | `tolerations`              | Toleration labels for pod assignment            | []                                                         
+| `config.offlineMode`              | Sets Gitea's Offline Mode. Values are `true` or `false`.           | `false`
