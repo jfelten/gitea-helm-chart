@@ -75,7 +75,6 @@ resources:
       cpu: 50m
 
 
-
 ## Enable persistence using Persistent Volume Claims
 ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
 ## ref:
