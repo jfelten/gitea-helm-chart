@@ -177,4 +177,4 @@ The following table lists the configurable parameters of this chart and their de
 | `config.offlineMode`              | Sets Gitea's Offline Mode. Values are `true` or `false`.           | `false`
 | `config.disable_registration`     | Disable Gitea's user registration. Values are `true` or `false`.   | `false`
 | `config.require_signin`           | Require Gitea user to be signed in to see any pages. Values are `true` or `false`. | `false`
-| `config.enable_openid`            | Allow login with OpenID. Values are `true` or `false`. | `true`
+| `config.openid_signin`            | Allow login with OpenID. Values are `true` or `false`. | `true`
