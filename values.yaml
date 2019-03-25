@@ -163,3 +163,7 @@ config:
 #  secretKey: define_your_secret
   disableInstaller: false
   offlineMode: false
+  require_signin: false
+  disable_registration: false
+  openid_signin: true
+
