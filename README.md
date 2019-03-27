@@ -175,3 +175,6 @@ The following table lists the configurable parameters of this chart and their de
 | `affinity`                 | Affinity settings for pod assignment            | {}                                                         |
 | `tolerations`              | Toleration labels for pod assignment            | []                                                         
 | `config.offlineMode`              | Sets Gitea's Offline Mode. Values are `true` or `false`.           | `false`
+| `config.disableRegistration`     | Disable Gitea's user registration. Values are `true` or `false`.   | `false`
+| `config.requireSignin`           | Require Gitea user to be signed in to see any pages. Values are `true` or `false`. | `false`
+| `config.openidSignin`            | Allow login with OpenID. Values are `true` or `false`. | `true`
