@@ -136,7 +136,7 @@ The following table lists the configurable parameters of this chart and their de
 | `images.postgres`                 | `postgres` image                            | `postgres:9.6`                                                    |
 | `images.imagePullPolicy`          | Image pull policy                               | `Always` if `imageTag` is `latest`, else `IfNotPresent`    |
 | `images.imagePullSecrets`         | Image pull secrets                              | `nil`                                                      |
-| `ingress.enable`             | Switch to create ingress for this chart deployment                 | `false`                                                 |
+| `ingress.enabled`             | Switch to create ingress for this chart deployment                 | `false`                                                 |
 | `ingress.useSSL`         | Changes default protocol to SSL?                      | false                                       |
 | `ingress.ingress_annotations`          | annotations used by the ingress | `nil`                                                    |
 | `service.http.serviceType`         | type of kubernetes services used for http i.e. ClusterIP, NodePort or LoadBalancer                | `ClusterIP`                                                 |
