@@ -1,9 +1,10 @@
 # Gitea Helm chart
-[Gitea](https://gitea.com/) is a lightweight github clone.  This is for those who wish to self host theri own git repos on kubernetes.
+[Gitea](https://gitea.com/) is a lightweight GitHub clone.  This is for those who wish to self host their own git repos on kubernetes.
 
 ## Introduction
 
-This is a kubernetes helm chart for [Gitea](https://gitea.com/) a lightweight github clone.  It deploys a pod containing containers for the Gitea application along with a Postgresql db for storing application state. It can create peristent volume claims if desired, and also an ingress if the kubernetes cluster supports it.
+This is a kubernetes helm chart for [Gitea](https://gitea.com/).  
+It deploys a pod containing containers for the Gitea application along with a Postgresql db for storing application state. It can create peristent volume claims if desired, and also an ingress if the kubernetes cluster supports it.
 
 This chart was developed and tested on kubernetes version 1.10, but should work on earlier or later versions.
 
