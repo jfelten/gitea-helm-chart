@@ -516,14 +516,14 @@ data:
     MAX_FILES = 5
 
     [log]
-    ROOT_PATH =
+    ROOT_PATH = /data/gitea/log
     ; Either "console", "file", "conn", "smtp" or "database", default is "console"
     ; Use comma to separate multiple modes, e.g. "console, file"
-    MODE = console
+    MODE = file
     ; Buffer length of the channel, keep it as it is if you don't know what it is.
     BUFFER_LEN = 10000
     ; Either "Trace", "Debug", "Info", "Warn", "Error", "Critical", default is "Trace"
-    LEVEL = Critical
+    LEVEL = Trace
 
     ; For "console" mode only
     [log.console]
@@ -531,7 +531,7 @@ data:
 
     ; For "file" mode only
     [log.file]
-    LEVEL =
+    LEVEL = Trace
     ; This enables automated log rotate(switch of following options), default is true
     LOG_ROTATE = true
     ; Max number of lines in a single file, default is 1000000

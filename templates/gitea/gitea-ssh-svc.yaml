@@ -9,6 +9,12 @@ metadata:
     heritage: "{{ .Release.Service }}"
 spec:
   type: {{ .Values.service.ssh.serviceType }}
+  {{- if .Values.service.ssh.externalIPs }}
+  externalIPs:
+  {{- range.Values.service.ssh.externalIPs }}
+  - {{ . }}
+  {{- end }}
+  {{- end }}
   ports:
   - name: ssh
     port: {{ .Values.service.ssh.port }}
