@@ -28,6 +28,8 @@ Create helm partial for memcached
       port: memcache
     initialDelaySeconds: 5
     timeoutSeconds: 1
+  securityContext:
+    runAsUser: 1000
   resources:
 {{ toYaml .Values.resources.memcached | indent 10 }}
 {{- end }}
