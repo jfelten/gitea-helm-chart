@@ -3,9 +3,9 @@
 ##
 
 images:
-  gitea: "gitea/gitea:1.6.1"
+  gitea: "gitea/gitea:1.9.3"
   postgres: "postgres:11"
-  memcached: "memcached:1.5.6-alpine"
+  memcached: "memcached:1.5.19-alpine"
   imagePullPolicy: Always
   ## Specify imagePullSecrets
   ## ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
