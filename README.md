@@ -185,7 +185,7 @@ The following table lists the configurable parameters of this chart and their de
 | `config.disableRegistration`     | Disable Gitea's user registration. Values are `true` or `false`.   | `false`
 | `config.requireSignin`           | Require Gitea user to be signed in to see any pages. Values are `true` or `false`. | `false`
 | `config.openidSignin`            | Allow login with OpenID. Values are `true` or `false`. | `true`
-| `config.notifyMail`            | Allow login with OpenID. Values are `true` or `false`. | `true`
+| `config.notifyMail`            | Mail notification. Values are `true` or `false`. | `false`
 | `config.mailer.enabled`            | Enable gitea mailer. Values are `true` or `false`. | `false`
 | `config.mailer.host`            | Hostname of the mail server. | `unset`
 | `config.mailer.port`            | Port of the mail server. Note, if the port ends with "465", SMTPS will be used. Using STARTTLS on port 587 is recommended per RFC 6409. If the server supports STARTTLS it will always be used. | `unset`
