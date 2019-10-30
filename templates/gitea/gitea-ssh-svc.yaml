@@ -18,6 +18,7 @@ spec:
   - name: ssh
     port: {{ .Values.service.ssh.port }}
     targetPort: ssh
+    protocol: TCP
     {{- if  .Values.service.ssh.nodePort }}
     nodePort: {{ .Values.service.ssh.nodePort }}
     {{- end }}
