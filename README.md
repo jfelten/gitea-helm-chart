@@ -154,6 +154,8 @@ The following table lists the configurable parameters of this chart and their de
 | `service.ssh.NodePort`            |  Manual NodePort for ssh traffic                 | `nil`                                                      |
 | `service.ssh.externalPort`           | Port exposed on the internet by a load balancer or firewall that redirects to the ingress or NodePort        | `nil`                                                      |
 | `service.ssh.externalHost`           | IP or DNS name exposed on the internet by a load balancer or firewall that redirects to the ingress or Node for http traffic                                                      |
+| `service.ssh.loadBalancerIP`           | If the service is a LoadBalancer you can pre-allocate its IP address here                                                      | `unset`
+| `service.ssh.svc_annotations`           | Set annotations for the ssh svc object. E.g. needed when using a load balancer and it should be a private load balancer instead of public.                                                      | `[]`
 | `resources.gitea.requests.memory`         | gitea container memory request                             | `100Mi`                                                      |
 | `resources.gitea.requests.cpu`      | gitea container request cpu          | `500m`                                            |
 | `resources.gitea.limits.memory`    | gitea container memory limits                      | `2Gi`                          |
@@ -183,3 +185,13 @@ The following table lists the configurable parameters of this chart and their de
 | `config.disableRegistration`     | Disable Gitea's user registration. Values are `true` or `false`.   | `false`
 | `config.requireSignin`           | Require Gitea user to be signed in to see any pages. Values are `true` or `false`. | `false`
 | `config.openidSignin`            | Allow login with OpenID. Values are `true` or `false`. | `true`
+| `config.notifyMail`            | Allow login with OpenID. Values are `true` or `false`. | `true`
+| `config.mailer.enabled`            | Enable gitea mailer. Values are `true` or `false`. | `false`
+| `config.mailer.host`            | Hostname of the mail server. | `unset`
+| `config.mailer.port`            | Port of the mail server. Note, if the port ends with "465", SMTPS will be used. Using STARTTLS on port 587 is recommended per RFC 6409. If the server supports STARTTLS it will always be used. | `unset`
+| `config.mailer.tls`            | Should SMTP connection use TLS. Values are `true` or `false`. | `false`
+| `config.mailer.from`            | Mail from address, RFC 5322. This can be just an email address, or the `"Name" <email@example.com>` format. | `unset`
+| `config.mailer.user`            | Mailer user name. | `unset`
+| `config.mailer.passwd`            | Use PASSWD = `your password` for quoting if you use special characters in the password.. | `unset`
+| `config.metrics.enabled`            | Enables metrics endpoint. Values are `true` or `false`. | `false`
+| `config.metrics.token`            | If you want to add authorization, specify a token for metrics endpoint.  | `unset`
