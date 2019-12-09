@@ -7,12 +7,18 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+  annotations:
+{{ toYaml .Values.service.ssh.svc_annotations | indent 4 }}
 spec:
   type: {{ .Values.service.ssh.serviceType }}
+  {{- if (.Values.service.ssh.loadBalancerIP) and eq .Values.service.ssh.serviceType "LoadBalancer" }}
+  loadBalancerIP: {{ .Values.service.ssh.loadBalancerIP }}
+  {{- end }}
   ports:
   - name: ssh
     port: {{ .Values.service.ssh.port }}
     targetPort: ssh
+    protocol: TCP
     {{- if  .Values.service.ssh.nodePort }}
     nodePort: {{ .Values.service.ssh.nodePort }}
     {{- end }}
