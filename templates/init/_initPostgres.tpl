@@ -5,7 +5,7 @@ Create helm partial for gitea server
 {{ if and (not .Values.useInPodPostgres) (.Values.externalDB) (eq "postgres" .Values.dbType ) }}
 - name: init-postgres
   image: "{{ .Values.images.postgres }}"
-  imagePullPolicy: {{ .Values.images.pullPolicy }}
+  imagePullPolicy: {{ .Values.images.imagePullPolicy }}
   env:
   - name: PGHOST
     valueFrom:

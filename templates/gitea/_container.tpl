@@ -4,7 +4,7 @@ Create helm partial for gitea server
 {{- define "gitea" }}
 - name: gitea
   image: {{ .Values.images.gitea }}
-  imagePullPolicy: {{ .Values.images.pullPolicy }}
+  imagePullPolicy: {{ .Values.images.imagePullPolicy }}
   env:
   - name: POSTGRES_PASSWORD
     valueFrom:
