@@ -4,7 +4,7 @@ Create helm partial for memcached
 {{- define "memcached" }}
 - name: memcached
   image: {{ .Values.images.memcached }}
-  imagePullPolicy: {{ .Values.images.pullPolicy }}
+  imagePullPolicy: {{ .Values.images.imagePullPolicy }}
   command:
     - memcached
     - -m {{ .Values.memcached.maxItemMemory  }}
