@@ -715,3 +715,7 @@ data:
     ENABLED = {{ .Values.config.metrics.enabled }}
     ; If you want to add authorization, specify a token here
     TOKEN = {{ .Values.config.metrics.token }}
+{{- if .Values.extra_config }}
+
+{{ .Values.extra_config | indent 4 }}
+{{ end }}
