@@ -184,3 +184,8 @@ config:
     enabled: false
     token: ""
 
+## Here you can set extra settings from https://docs.gitea.io/en-us/config-cheat-sheet/
+## The following is just an example
+# extra_config: |-
+#   [service]
+#   ENABLE_USER_HEATMAP=false
