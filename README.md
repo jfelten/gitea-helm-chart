@@ -149,6 +149,8 @@ The following table lists the configurable parameters of this chart and their de
 | `service.http.NodePort`            |  Manual NodePort for web traffic                 | `nil`                                                      |
 | `service.http.externalPort`           | Port exposed on the internet by a load balancer or firewall that redirects to the ingress or NodePort        | `nil`                                                      |
 | `service.http.externalHost`           | IP or DNS name exposed on the internet by a load balancer or firewall that redirects to the ingress or Node for http traffic                       | `nil`                                                      |
+| `service.http.loadBalancerIP`           | If the service is a LoadBalancer you can pre-allocate its IP address here                                                      | `unset`
+| `service.http.svc_annotations`           | Set annotations for the http svc object.                                                       | `[]`
 | `service.ssh.serviceType`         | type of kubernetes services used for ssh i.e. ClusterIP, NodePort or LoadBalancer                | `ClusterIP`                                                 |
 | `service.ssh.port`       | http port for web traffic                               | `22`                                                      |
 | `service.ssh.NodePort`            |  Manual NodePort for ssh traffic                 | `nil`                                                      |
