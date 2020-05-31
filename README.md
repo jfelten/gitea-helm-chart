@@ -1,9 +1,10 @@
 # Gitea Helm chart
-[Gitea](https://gitea.com/) is a lightweight github clone.  This is for those who wish to self host theri own git repos on kubernetes.
+[Gitea](https://gitea.com/) is a lightweight GitHub clone.  This is for those who wish to self host their own git repos on kubernetes.
 
 ## Introduction
 
-This is a kubernetes helm chart for [Gitea](https://gitea.com/) a lightweight github clone.  It deploys a pod containing containers for the Gitea application along with a Postgresql db for storing application state. It can create peristent volume claims if desired, and also an ingress if the kubernetes cluster supports it.
+This is a kubernetes helm chart for [Gitea](https://gitea.com/).  
+It deploys a pod containing containers for the Gitea application along with a Postgresql db for storing application state. It can create peristent volume claims if desired, and also an ingress if the kubernetes cluster supports it.
 
 This chart was developed and tested on kubernetes version 1.10, but should work on earlier or later versions.
 
@@ -16,7 +17,11 @@ This chart was developed and tested on kubernetes version 1.10, but should work 
 
 ## Installing the Chart
 
-To install the chart with the release name `gitea` in the namespace `tools` with the customized values in custom_values.yaml run:
+To install the chart, first add the repo:
+```bash
+helm repo add jfelten https://jfelten.github.io/helm-charts/charts
+```
+Then to install with the release name `gitea` in the namespace `gittea` with the customized values in custom_values.yaml run:
 
 ```bash
 $ helm install -- values custom_values.yaml --name gitea --namespace gittea jfelten/gitea
@@ -136,7 +141,7 @@ The following table lists the configurable parameters of this chart and their de
 | `images.postgres`                 | `postgres` image                            | `postgres:9.6`                                                    |
 | `images.imagePullPolicy`          | Image pull policy                               | `Always` if `imageTag` is `latest`, else `IfNotPresent`    |
 | `images.imagePullSecrets`         | Image pull secrets                              | `nil`                                                      |
-| `ingress.enable`             | Switch to create ingress for this chart deployment                 | `false`                                                 |
+| `ingress.enabled`             | Switch to create ingress for this chart deployment                 | `false`                                                 |
 | `ingress.useSSL`         | Changes default protocol to SSL?                      | false                                       |
 | `ingress.ingress_annotations`          | annotations used by the ingress | `nil`                                                    |
 | `service.http.serviceType`         | type of kubernetes services used for http i.e. ClusterIP, NodePort or LoadBalancer                | `ClusterIP`                                                 |
@@ -144,11 +149,15 @@ The following table lists the configurable parameters of this chart and their de
 | `service.http.NodePort`            |  Manual NodePort for web traffic                 | `nil`                                                      |
 | `service.http.externalPort`           | Port exposed on the internet by a load balancer or firewall that redirects to the ingress or NodePort        | `nil`                                                      |
 | `service.http.externalHost`           | IP or DNS name exposed on the internet by a load balancer or firewall that redirects to the ingress or Node for http traffic                       | `nil`                                                      |
+| `service.http.loadBalancerIP`           | If the service is a LoadBalancer you can pre-allocate its IP address here                                                      | `unset`
+| `service.http.svc_annotations`           | Set annotations for the http svc object.                                                       | `[]`
 | `service.ssh.serviceType`         | type of kubernetes services used for ssh i.e. ClusterIP, NodePort or LoadBalancer                | `ClusterIP`                                                 |
 | `service.ssh.port`       | http port for web traffic                               | `22`                                                      |
 | `service.ssh.NodePort`            |  Manual NodePort for ssh traffic                 | `nil`                                                      |
 | `service.ssh.externalPort`           | Port exposed on the internet by a load balancer or firewall that redirects to the ingress or NodePort        | `nil`                                                      |
 | `service.ssh.externalHost`           | IP or DNS name exposed on the internet by a load balancer or firewall that redirects to the ingress or Node for http traffic                                                      |
+| `service.ssh.loadBalancerIP`           | If the service is a LoadBalancer you can pre-allocate its IP address here                                                      | `unset`
+| `service.ssh.svc_annotations`           | Set annotations for the ssh svc object. E.g. needed when using a load balancer and it should be a private load balancer instead of public.                                                      | `[]`
 | `resources.gitea.requests.memory`         | gitea container memory request                             | `100Mi`                                                      |
 | `resources.gitea.requests.cpu`      | gitea container request cpu          | `500m`                                            |
 | `resources.gitea.limits.memory`    | gitea container memory limits                      | `2Gi`                          |
@@ -174,3 +183,17 @@ The following table lists the configurable parameters of this chart and their de
 | `inPodPostgres.dataMountPath`             | Path for Postgres data storage                  | `nil`                                                         |
 | `affinity`                 | Affinity settings for pod assignment            | {}                                                         |
 | `tolerations`              | Toleration labels for pod assignment            | []                                                         
+| `config.offlineMode`              | Sets Gitea's Offline Mode. Values are `true` or `false`.           | `false`
+| `config.disableRegistration`     | Disable Gitea's user registration. Values are `true` or `false`.   | `false`
+| `config.requireSignin`           | Require Gitea user to be signed in to see any pages. Values are `true` or `false`. | `false`
+| `config.openidSignin`            | Allow login with OpenID. Values are `true` or `false`. | `true`
+| `config.notifyMail`            | Mail notification. Values are `true` or `false`. | `false`
+| `config.mailer.enabled`            | Enable gitea mailer. Values are `true` or `false`. | `false`
+| `config.mailer.host`            | Hostname of the mail server. | `unset`
+| `config.mailer.port`            | Port of the mail server. Note, if the port ends with "465", SMTPS will be used. Using STARTTLS on port 587 is recommended per RFC 6409. If the server supports STARTTLS it will always be used. | `unset`
+| `config.mailer.tls`            | Should SMTP connection use TLS. Values are `true` or `false`. | `false`
+| `config.mailer.from`            | Mail from address, RFC 5322. This can be just an email address, or the `"Name" <email@example.com>` format. | `unset`
+| `config.mailer.user`            | Mailer user name. | `unset`
+| `config.mailer.passwd`            | Use PASSWD = `your password` for quoting if you use special characters in the password.. | `unset`
+| `config.metrics.enabled`            | Enables metrics endpoint. Values are `true` or `false`. | `false`
+| `config.metrics.token`            | If you want to add authorization, specify a token for metrics endpoint.  | `unset`

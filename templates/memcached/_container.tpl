@@ -4,7 +4,7 @@ Create helm partial for memcached
 {{- define "memcached" }}
 - name: memcached
   image: {{ .Values.images.memcached }}
-  imagePullPolicy: {{ .Values.images.pullPolicy }}
+  imagePullPolicy: {{ .Values.images.imagePullPolicy }}
   command:
     - memcached
     - -m {{ .Values.memcached.maxItemMemory  }}
@@ -28,6 +28,8 @@ Create helm partial for memcached
       port: memcache
     initialDelaySeconds: 5
     timeoutSeconds: 1
+  securityContext:
+    runAsUser: 1000
   resources:
 {{ toYaml .Values.resources.memcached | indent 10 }}
 {{- end }}

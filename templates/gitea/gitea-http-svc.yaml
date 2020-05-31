@@ -7,8 +7,13 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: "{{ .Release.Name }}"
     heritage: "{{ .Release.Service }}"
+  annotations:
+{{ toYaml .Values.service.http.svc_annotations | indent 4 }}
 spec:
   type: {{ .Values.service.http.serviceType }}
+  {{- if (.Values.service.http.loadBalancerIP) and eq .Values.service.http.serviceType "LoadBalancer" }}
+  loadBalancerIP: {{ .Values.service.http.loadBalancerIP }}
+  {{- end }}
   ports:
   - name: http
     port: {{ .Values.service.http.port }}

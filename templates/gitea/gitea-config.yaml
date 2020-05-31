@@ -323,7 +323,7 @@ data:
     ; Indicate whether to check minimum key size with corresponding type
     MINIMUM_KEY_SIZE_CHECK = false
     ; Disable CDN even in "prod" mode
-    OFFLINE_MODE = false
+    OFFLINE_MODE = {{ .Values.config.offlineMode }}
     DISABLE_ROUTER_LOG = false
     ; Generate steps:
     ; $ ./gitea cert -ca=true -duration=8760h0m0s -host=myhost.example.com
@@ -549,7 +549,7 @@ data:
     ;  - <username>.livejournal.com
     ;
     ; Whether to allow signin in via OpenID
-    ENABLE_OPENID_SIGNIN = true
+    ENABLE_OPENID_SIGNIN = {{ .Values.config.openidSignin }}
     ; Whether to allow registering via OpenID
     ; Do not include to rely on rhw DISABLE_REGISTRATION setting
     ;ENABLE_OPENID_SIGNUP = true
@@ -575,17 +575,13 @@ data:
     ; gitea.io,example.com
     EMAIL_DOMAIN_WHITELIST=
     ; Disallow registration, only allow admins to create accounts.
-    DISABLE_REGISTRATION = false
+    DISABLE_REGISTRATION = {{ .Values.config.disableRegistration }}
     ; Allow registration only using third-party services, it works only when DISABLE_REGISTRATION is false
     ALLOW_ONLY_EXTERNAL_REGISTRATION = false
     ; User must sign in to view anything.
-    REQUIRE_SIGNIN_VIEW = false
+    REQUIRE_SIGNIN_VIEW = {{ .Values.config.requireSignin }}
     ; Mail notification
-    ENABLE_NOTIFY_MAIL = false
-    ; This setting enables gitea to be signed in with HTTP BASIC Authentication using the user's password
-    ; If you set this to false you will not be able to access the tokens endpoints on the API with your password
-    ; Please note that setting this to false will not disable OAuth Basic or Basic authentication using a token
-    ENABLE_BASIC_AUTHENTICATION = true
+    ENABLE_NOTIFY_MAIL = {{ .Values.config.notifyMail }}
     ; More detail: https://github.com/gogits/gogs/issues/165
     ENABLE_REVERSE_PROXY_AUTHENTICATION = false
     ENABLE_REVERSE_PROXY_AUTO_REGISTRATION = false
@@ -660,7 +656,7 @@ data:
     PROXY_HOSTS =
 
     [mailer]
-    ENABLED = false
+    ENABLED = {{ .Values.config.mailer.enabled }}
     ; Buffer length of channel, keep it as it is if you don't know what it is.
     SEND_BUFFER_LEN = 100
     ; Prefix displayed before subject in mail
@@ -669,7 +665,7 @@ data:
     ; Gmail: smtp.gmail.com:587
     ; QQ: smtp.qq.com:465
     ; Note, if the port ends with "465", SMTPS will be used. Using STARTTLS on port 587 is recommended per RFC 6409. If the server supports STARTTLS it will always be used.
-    HOST =
+    HOST = {{ .Values.config.mailer.host }}:{{ .Values.config.mailer.port }}
     ; Disable HELO operation when hostnames are different.
     DISABLE_HELO =
     ; Custom hostname for HELO operation, if no value is provided, one is retrieved from system.
@@ -681,13 +677,13 @@ data:
     CERT_FILE = custom/mailer/cert.pem
     KEY_FILE = custom/mailer/key.pem
     ; Should SMTP connection use TLS
-    IS_TLS_ENABLED = false
+    IS_TLS_ENABLED = {{ .Values.config.mailer.tls }}
     ; Mail from address, RFC 5322. This can be just an email address, or the `"Name" <email@example.com>` format
-    FROM =
+    FROM = {{ .Values.config.mailer.from }}
     ; Mailer user name and password
-    USER =
+    USER = {{ .Values.config.mailer.user }}
     ; Use PASSWD = `your password` for quoting if you use special characters in the password.
-    PASSWD =
+    PASSWD = {{ .Values.config.mailer.passwd }}
     ; Send mails as plain text
     SEND_AS_PLAIN_TEXT = false
     ; Set Mailer Type (either SMTP, sendmail or dummy to just send to the log)
@@ -1043,9 +1039,9 @@ data:
 
     [metrics]
     ; Enables metrics endpoint. True or false; default is false.
-    ENABLED = false
+    ENABLED = {{ .Values.config.metrics.enabled }}
     ; If you want to add authorization, specify a token here
-    TOKEN =
+    TOKEN = TOKEN = {{ .Values.config.metrics.token }}
 
     [task]
     ; Task queue type, could be `channel` or `redis`.
@@ -1061,3 +1057,8 @@ data:
     MAX_ATTEMPTS = 3
     ; Backoff time per http/https request retry (seconds)
     RETRY_BACKOFF = 3
+
+{{- if .Values.extra_config }}
+
+{{ .Values.extra_config | indent 4 }}
+{{ end }}
