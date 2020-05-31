@@ -1,9 +1,9 @@
 # Gitea Helm chart
-[Gitea](https://gitea.com/) is a lightweight GitHub clone.  This is for those who wish to self host their own git repos on kubernetes.
+[Gitea](https://gitea.com/) is a lightweight GitHub clone. This is for those who wish to self host their own git repos on kubernetes.
 
 ## Introduction
 
-This is a kubernetes helm chart for [Gitea](https://gitea.com/).  
+This is a kubernetes helm chart for [Gitea](https://gitea.com/).
 It deploys a pod containing containers for the Gitea application along with a Postgresql db for storing application state. It can create peristent volume claims if desired, and also an ingress if the kubernetes cluster supports it.
 
 This chart was developed and tested on kubernetes version 1.10, but should work on earlier or later versions.
@@ -35,7 +35,7 @@ $ helm install --name gitea --namewspace tools .
 >
 
 ### Database config in pod vs external db
-By default the chart will spin up a postgres contain er inside the pod.  It can also work with external databases.  To disable the in pod database and use and external one use the following values:
+By default the chart will spin up a postgres container inside the pod. It can also work with external databases. To disable the in pod database and use and external one use the following values:
 
 ```yaml
 dbType: "postgres"
@@ -50,7 +50,7 @@ useInPodPostgres: true
    dbDatabase: "gitea"
 ```
 
-This chart has only been tested using a postgres database.  It is theoretically possible to work with others that gitea supports, but no testing has been done.  Pull Requests to support or confirmation of other database connectivity would be much appreciated.
+This chart has only been tested using a postgres database. It is theoretically possible to work with others that gitea supports, but no testing has been done. Pull Requests to support or confirmation of other database connectivity would be much appreciated.
 
 ### Example custom_values.yaml configs
 
@@ -106,26 +106,26 @@ The command removes all the Kubernetes components associated with the chart and 
 
 ## Data Management
 
-This chart will use and create optional persistent volume claims for both postgres (if using in pod db) and gitea data.  By default the data will be deleted upon uninstalling the chart. This is not ideal but can be managed in a couple ways:
+This chart will use and create optional persistent volume claims for both postgres (if using in pod db) and gitea data. By default the data will be deleted upon uninstalling the chart. This is not ideal but can be managed in a couple ways:
 
-* prevent helm from deleting the pvcs it creates.  Do this by enabling annotation: helm.sh/resource-policy": keep in the pvc optional annotations
+* prevent helm from deleting the pvcs it creates. Do this by enabling annotation: helm.sh/resource-policy": keep in the pvc optional annotations
 
 ```yaml
 persistence:
   annotations:
     "helm.sh/resource-policy": keep
 ```
-* create a pvc outside the chart and configure the chart to use it.  Do this by setting the persistence existingGiteaClaim and existingPostgresClaim properties.
+* create a pvc outside the chart and configure the chart to use it. Do this by setting the persistence existingGiteaClaim and existingPostgresClaim properties.
 
 ```yaml
  existingGiteaClaim: gitea-gitea
  existingPostgresClaim: gitea-postgres
 ```
-a trick that can be is used to first set the helm.sh/resource-policy annotation so that the chart generates the pvcs, but doesn't delete them.  Upon next deplyment set the exsiting claim names to the generated values.
+a trick that can be is used to first set the helm.sh/resource-policy annotation so that the chart generates the pvcs, but doesn't delete them. Upon next deplyment set the exsiting claim names to the generated values.
 
 ## Ingress And External Host/Ports
 
-Gitea requires ports to be exposed for both web and ssh traffic.  The chart is flexible and allow a combination of either ingresses, loadblancer, or nodeport services.
+Gitea requires ports to be exposed for both web and ssh traffic. The chart is flexible and allow a combination of either ingresses, loadblancer, or nodeport services.
 
 To expose the web application this chart will generate an ingress using the ingress controller of choice if specified. If an ingress is enabled services.http.externalHost must be specified. To expose SSH services it relies on either a LoadBalancer or NodePort.
 
