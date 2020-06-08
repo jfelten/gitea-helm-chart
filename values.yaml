@@ -3,7 +3,7 @@
 ##
 
 images:
-  gitea: "gitea/gitea:1.9.3"
+  gitea: "gitea/gitea:1.11.5"
   postgres: "postgres:11"
   memcached: "memcached:1.5.19-alpine"
   imagePullPolicy: Always
@@ -21,6 +21,8 @@ memcached:
 ## ingress settings - Optional
 ingress:
   enabled: false
+  ## sets .ini PROTOCOL value
+  # protocol: https
   ## annotations used by the ingress - ex for k8s nginx ingress controller:
   #ingress_annotations:
   #  kubernetes.io/ingress.class: nginx
@@ -43,6 +45,8 @@ service:
     # sometimes if is necesary to access through an external port i.e. http(s)://<dns-name>:<external-port>
     externalPort: 8280
     externalHost: git.example.com
+    #some parts of gitea like the api use a redirect needs config if using non standard ports
+    #httpAPIPort: 8280
     ## if serviceType is LoadBalancer
     #loadBalancerIP: "192.168.0.100"
     #svc_annotations:
@@ -83,7 +87,6 @@ resources:
     requests:
       memory: 64Mi
       cpu: 50m
-
 
 
 ## Enable persistence using Persistent Volume Claims

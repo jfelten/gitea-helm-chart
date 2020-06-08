@@ -1,6 +1,7 @@
+apiVersion: v2
 name: gitea
-version: 1.9.3
-appVersion: 1.9.3
+version: 1.11.5
+appVersion: 1.11.5
 description: Git with a cup of tea
 icon: https://docs.gitea.io/images/gitea.png
 keywords:
