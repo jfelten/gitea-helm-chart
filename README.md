@@ -24,7 +24,7 @@ helm repo add jfelten https://jfelten.github.io/helm-charts/charts
 Then to install with the release name `gitea` in the namespace `gittea` with the customized values in custom_values.yaml run:
 
 ```bash
-$ helm install -- values custom_values.yaml --name gitea --namespace gittea jfelten/gitea
+$ helm install -- values custom_values.yaml --name gitea --namespace gitea jfelten/gitea
 ```
 or locally:
 
@@ -99,7 +99,7 @@ persistence:
 To uninstall/delete the `gitea` deployment:
 
 ```bash
-$ helm delete gitea --purge
+$ helm uninstall gitea --namespace gitea
 ```
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
