@@ -62,4 +62,5 @@ publish-public-repository:
 .PHONY: publish-public-repository
 
 deploy: publish-local-registry publish-public-repository
+	
 .PHONY:deploy
