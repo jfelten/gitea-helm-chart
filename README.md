@@ -17,14 +17,14 @@ This chart was developed and tested on kubernetes version 1.10, but should work 
 
 ## Installing the Chart
 
-To install the chart, first add the repo:
+This chart is published in [keyporttech/charts](https://github.com/keyporttech/helm-charts). To install the chart, first add the keyporttech helm repo:
 ```bash
-helm repo add jfelten https://jfelten.github.io/helm-charts/charts
+helm repo add keyporttech https://keyporttech.github.io/helm-charts/
 ```
 Then to install with the release name `gitea` in the namespace `gittea` with the customized values in custom_values.yaml run:
 
 ```bash
-$ helm install -- values custom_values.yaml --name gitea --namespace gitea jfelten/gitea
+$ helm install -- values custom_values.yaml --name gitea --namespace gitea keyporttech/gitea
 ```
 or locally:
 
@@ -33,6 +33,17 @@ $ helm install --name gitea --namewspace tools .
 ```
 > **Tip**: You can use the default [values.yaml](values.yaml)
 >
+
+## Contributing
+Please submit any pull requests to the individual chart repos themselves. Please see [keyporttech charts contribution guidelines](https://github.com/keyporttech/helm-charts/blob/master/CONTRIBUTING.md)
+
+### Running the cicd tooling locally
+
+This chart uses a Makefile to run CICD. To run:
+
+```bash
+make build
+```
 
 ### Database config in pod vs external db
 By default the chart will spin up a postgres container inside the pod. It can also work with external databases. To disable the in pod database and use and external one use the following values:
@@ -136,7 +147,7 @@ The following table lists the configurable parameters of this chart and their de
 
 | Parameter                  | Description                                     | Default                                                    |
 | -----------------------    | ---------------------------------------------   | ---------------------------------------------------------- |
-| `images.gitea`                    | `gitea` image                     | `gitea/gitea:1.6.3`                                                 |
+| `images.gitea`                    | `gitea` image                     | `gitea/gitea:1.11.5`                                                 |
 | `images.postgres`                 | `postgres` image                            | `postgres:9.6`                                                    |
 | `images.imagePullPolicy`          | Image pull policy                               | `Always` if `imageTag` is `latest`, else `IfNotPresent`    |
 | `images.imagePullSecrets`         | Image pull secrets                              | `nil`                                                      |
