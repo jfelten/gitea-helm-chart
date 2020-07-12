@@ -11,12 +11,11 @@
 
 REGISTRY=registry.keyporttech.com:30243
 DOCKERHUB_REGISTRY="keyporttech"
-CHART=statsd
+CHART=gitea
 VERSION = $(shell yq r Chart.yaml 'version')
 RELEASED_VERSION = $(shell helm repo add keyporttech https://keyporttech.github.io/helm-charts/ > /dev/null && helm repo update> /dev/null && helm show chart keyporttech/$(CHART) | yq - read 'version')
 REGISTRY_TAG=${REGISTRY}/${CHART}:${VERSION}
 CWD = $(shell pwd)
-CURRENT_BRANCH = ${GIT-REF}
 
 lint:
 	@echo "linting..."
@@ -63,13 +62,5 @@ publish-public-repository:
 .PHONY: publish-public-repository
 
 deploy: publish-local-registry publish-public-repository
-	rm -rf /tmp/helm-$(CHART)
-	rm -rf helm-charts
-	git clone git@github.com:keyporttech/helm-$(CHART).git /tmp/helm-$(CHART)
-	cd /tmp/helm-$(CHART) && git remote add downstream ssh://git@git.keyporttech.com:30222/keyporttech/helm-$(CHART).git
-	cd /tmp/helm-$(CHART) && git config --global user.email "bot@keyporttech.com"
-	cd /tmp/helm-$(CHART) && git config --global user.name "keyporttech-bot"
-	cd /tmp/helm-$(CHART) && git fetch downstream master
-	cd /tmp/helm-$(CHART) && git fetch origin
-	cd /tmp/helm-$(CHART) && git push -u origin downstream/master:master --force-with-lease
+
 .PHONY:deploy
