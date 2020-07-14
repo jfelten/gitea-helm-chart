@@ -35,7 +35,7 @@ $ helm install --name gitea --namewspace tools .
 >
 
 ## Contributing
-Please submit any pull requests to the individual chart repos themselves. Please see [keyporttech charts contribution guidelines](https://github.com/keyporttech/helm-charts/blob/master/CONTRIBUTING.md)
+Please see [keyporttech charts contribution guidelines](https://github.com/keyporttech/helm-charts/blob/master/CONTRIBUTING.md)
 
 ### Running the cicd tooling locally
 
