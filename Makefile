@@ -25,12 +25,14 @@ lint:
 	echo "NEW CHART VERISION=$(VERSION)"
 	echo "CURRENT RELEASED CHART VERSION=$(RELEASED_VERSION)"
 
+.PHONY: lint
+
+check-version:
 ifeq ($(VERSION),$(RELEASED_VERSION))
 	echo "$(VERSION) must be > $(RELEASED_VERSION). Please bump chart version."
 	exit 1
 endif
-
-.PHONY: lint
+.PHONY: check-version
 
 test:
 	@echo "testing..."
