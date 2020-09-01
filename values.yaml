@@ -3,7 +3,7 @@
 ##
 
 images:
-  gitea: "gitea/gitea:1.12.2"
+  gitea: gitea/gitea:1.12.3
   postgres: "postgres:11"
   memcached: "memcached:1.5.19-alpine"
   imagePullPolicy: Always
@@ -11,13 +11,11 @@ images:
   ## ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
   ##
   # imagePullSecrets: myregistrykey
-
 ## cache settings
 memcached:
   maxItemMemory: 64
   verbosity: v
   extendedOptions: modern
-
 ## ingress settings - Optional
 ingress:
   enabled: false
@@ -29,12 +27,11 @@ ingress:
   #   nginx.ingress.kubernetes.io/proxy-body-size: "0"
   #   nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
   #   nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
-
-  ## tls support for the ingress
-  # tls:
-  #   - secretName: <TLS_SECRET>
-  #     hosts:
-  #       - 'git.example.com'
+## tls support for the ingress
+# tls:
+#   - secretName: <TLS_SECRET>
+#     hosts:
+#       - 'git.example.com'
 
 ## chart defaults to using an ingress for http, but change to LoadBalancer if using you cluster supports it
 service:
@@ -64,7 +61,6 @@ service:
     # svc_annotations:
     #   service.beta.kubernetes.io/azure-load-balancer-internal: "true"
     #   service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "a_subnet"
-
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
 ##
@@ -87,8 +83,6 @@ resources:
     requests:
       memory: 64Mi
       cpu: 50m
-
-
 ## Enable persistence using Persistent Volume Claims
 ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
 ## ref:
@@ -126,12 +120,10 @@ persistence:
 # valid types: postgres, mysql, mssql, sqllite
 dbType: "postgres"
 useInPodPostgres: true
-
 inPodPostgres:
   secret: postgresecrets
   subPath: "postgresql-db"
   dataMountPath: /var/lib/postgresql/data/pgdata
-
   # Create a database user
   # Default: postgres
   # postgresUser:
@@ -140,7 +132,6 @@ inPodPostgres:
 
   # Inject postgresPassword via a volume mount instead of environment variable
   usePasswordFile: false
-
   # Use Existing secret instead of creating one
   # It must have a postgres-password key containing the desired password
   # existingSecret: 'secret'
@@ -148,7 +139,6 @@ inPodPostgres:
   # Create a database
   # Default: the postgres user
   postgresDatabase: gitea
-
   # Specify initdb arguments, e.g. --data-checksums
   # ref: https://github.com/docker-library/docs/blob/master/postgres/content.md#postgres_initdb_args
   # ref: https://www.postgresql.org/docs/current/static/app-initdb.html
@@ -158,22 +148,18 @@ inPodPostgres:
   ## {"sharedBuffers": "500MB"}
   ## ref: https://www.postgresql.org/docs/current/static/runtime-config.html
   # postgresConfig:
-
-
 # Node labels and tolerations for pod assignment
 # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
 # ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#taints-and-tolerations-beta-feature
 nodeSelector: {}
 tolerations: []
 affinity: {}
-
 ## Annotations for the deployment and nodes.
 deploymentAnnotations: {}
 podAnnotations: {}
-
 # In order to disable initial install screen you must have secretKey and disableInstaller=true
 config:
-#  secretKey: define_your_secret
+  #  secretKey: define_your_secret
   disableInstaller: false
   offlineMode: false
   requireSignin: false
