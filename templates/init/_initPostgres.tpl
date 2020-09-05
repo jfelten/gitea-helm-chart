@@ -7,7 +7,7 @@ Create helm partial for gitea server
   image: busybox:1.32.0
   imagePullPolicy: IfNotPresent
   command: ["/bin/sh"]
-  args: ["-c", "mkdir {{ .Values.inPodPostgres.dataMountPath  }}/{{ .Values.inPodPostgres.subPath  }} "]
+  args: ["-c", "if [ ! -f {{ .Values.inPodPostgres.dataMountPath  }}/{{ .Values.inPodPostgres.subPath  }} ] && [ ! -d {{ .Values.inPodPostgres.dataMountPath  }}/{{ .Values.inPodPostgres.subPath  }} ]; then mkdir {{ .Values.inPodPostgres.dataMountPath  }}/{{ .Values.inPodPostgres.subPath  }}; fi"]
   volumeMounts:
   - name: postgres-data
     mountPath: {{ .Values.inPodPostgres.dataMountPath }}
