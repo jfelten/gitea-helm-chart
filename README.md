@@ -147,7 +147,7 @@ The following table lists the configurable parameters of this chart and their de
 
 | Parameter                  | Description                                     | Default                                                    |
 | -----------------------    | ---------------------------------------------   | ---------------------------------------------------------- |
-| `images.gitea`                    | `gitea` image                     | `gitea/gitea:1.12.2`                                                 |
+| `images.gitea`                    | `gitea` image                     | `gitea/gitea:1.12.4`                                                 |
 | `images.postgres`                 | `postgres` image                            | `postgres:9.6`                                                    |
 | `images.imagePullPolicy`          | Image pull policy                               | `Always` if `imageTag` is `latest`, else `IfNotPresent`    |
 | `images.imagePullSecrets`         | Image pull secrets                              | `nil`                                                      |
