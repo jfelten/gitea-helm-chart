@@ -1,20 +1,20 @@
 apiVersion: v2
 name: gitea
-version: 0.2.5
-appVersion: 1.12.2
+version: 0.2.6
+appVersion: 1.12.4
 description: Git with a cup of tea
 icon: https://docs.gitea.io/images/gitea.png
 home: https://github.com/jfelten/gitea-helm-chart
 keywords:
-  - git
-  - issue tracker
-  - code review
-  - wiki
-  - gitea
-  - gogs
+- git
+- issue tracker
+- code review
+- wiki
+- gitea
+- gogs
 sources:
-  - https://github.com/go-gitea/gitea
-  - https://hub.docker.com/r/gitea/gitea/
+- https://github.com/go-gitea/gitea
+- https://hub.docker.com/r/gitea/gitea/
 maintainers:
-  - name: John Felten
-    email: john.felten@gmail.com
+- name: John Felten
+  email: john.felten@gmail.com
