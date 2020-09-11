@@ -207,3 +207,4 @@ The following table lists the configurable parameters of this chart and their de
 | `config.mailer.passwd`            | Use PASSWD = `your password` for quoting if you use special characters in the password.. | `unset`
 | `config.metrics.enabled`            | Enables metrics endpoint. Values are `true` or `false`. | `false`
 | `config.metrics.token`            | If you want to add authorization, specify a token for metrics endpoint.  | `unset`
+
