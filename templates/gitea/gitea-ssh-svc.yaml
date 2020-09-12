@@ -11,8 +11,10 @@ metadata:
 {{ toYaml .Values.service.ssh.svc_annotations | indent 4 }}
 spec:
   type: {{ .Values.service.ssh.serviceType }}
-  {{- if (.Values.service.ssh.loadBalancerIP) and eq .Values.service.ssh.serviceType "LoadBalancer" }}
+  {{- if eq .Values.service.ssh.serviceType "LoadBalancer" }}
+  {{- if .Values.service.ssh.loadBalancerIP }}
   loadBalancerIP: {{ .Values.service.ssh.loadBalancerIP }}
+  {{- end }}
   {{- end }}
   ports:
   - name: ssh

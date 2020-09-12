@@ -11,8 +11,10 @@ metadata:
 {{ toYaml .Values.service.http.svc_annotations | indent 4 }}
 spec:
   type: {{ .Values.service.http.serviceType }}
-  {{- if (.Values.service.http.loadBalancerIP) and eq .Values.service.http.serviceType "LoadBalancer" }}
-  loadBalancerIP: {{ .Values.service.http.loadBalancerIP }}
+  {{- if eq .Values.service.ssh.serviceType "LoadBalancer" }}
+  {{- if .Values.service.ssh.loadBalancerIP }}
+  loadBalancerIP: {{ .Values.service.ssh.loadBalancerIP }}
+  {{- end }}
   {{- end }}
   ports:
   - name: http
