@@ -46,18 +46,19 @@ make build
 ```
 
 ### Database config in pod vs external db
+
 By default the chart will spin up a postgres container inside the pod. It can also work with external databases. To disable the in pod database and use and external one use the following values:
 
 ```yaml
 dbType: "postgres"
-useInPodPostgres: true
+useInPodPostgres: false
 
 #Connect to an external database
- externalDB:
-  dbUser: "postgres"
+externalDB:
+   dbUser: "postgres"
    dbPassword: "<MY_PASSWORD>"
    dbHost: "db-service-name.namespace.svc.cluster.local" # or some external host
-   dbPort: "5432"
+   dbPort: 5432
    dbDatabase: "gitea"
 ```
 
@@ -186,7 +187,7 @@ The following table lists the configurable parameters of this chart and their de
 | `externalDB.dbUser`             | external db user                  | ` unset`                                                         |
 `externalDB.dbPassword`             | external db password                  | ` unset`                                                         |
 `externalDB.dbHost`             | external db host                  | ` unset`                                                         |
-`externalDB.dbPort`             | external db port                  | ` unset`                                                         |
+`externalDB.dbPort`             | external db port - integer value (ex: 5432)            | ` unset`                                                         |
 `externalDB.dbDatabase`             | external db database name                  | ` unset`                                                         |
 | `inPodPostgres.secret` | Generated Secret to store postgres passwords   | `postgressecrets`                                                     |
 | `inPodPostgres.subPath`             | Subpath for Postgres data storage                  | `nil`                                                         |
