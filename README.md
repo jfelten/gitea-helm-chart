@@ -6,7 +6,7 @@
 This is a kubernetes helm chart for [Gitea](https://gitea.com/).
 It deploys a pod containing containers for the Gitea application along with a Postgresql db for storing application state. It can create peristent volume claims if desired, and also an ingress if the kubernetes cluster supports it.
 
-This chart was developed and tested on kubernetes version 1.10, but should work on earlier or later versions.
+This chart should work works on all current supported versions of kubernetes. We always run it in house on the latest version to make sure the chart stays current. Currently the chart supports helm 3 only.
 
 ## Prerequisites
 
@@ -207,4 +207,3 @@ The following table lists the configurable parameters of this chart and their de
 | `config.mailer.passwd`            | Use PASSWD = `your password` for quoting if you use special characters in the password.. | `unset`
 | `config.metrics.enabled`            | Enables metrics endpoint. Values are `true` or `false`. | `false`
 | `config.metrics.token`            | If you want to add authorization, specify a token for metrics endpoint.  | `unset`
-
