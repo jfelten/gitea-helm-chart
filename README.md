@@ -6,7 +6,9 @@
 This is a kubernetes helm chart for [Gitea](https://gitea.com/).
 It deploys a pod containing containers for the Gitea application along with a Postgresql db for storing application state. It can create peristent volume claims if desired, and also an ingress if the kubernetes cluster supports it.
 
-This chart should work works on all current supported versions of kubernetes. We always run it in house on the latest version to make sure the chart stays current. Currently the chart supports helm 3 only.
+This chart should work works on current supported versions of kubernetes. It is always in active use on the latest kubernetes and sync'd to the latest gitea release to stay current.
+
+Currently the chart supports helm 3 only.
 
 ## Prerequisites
 

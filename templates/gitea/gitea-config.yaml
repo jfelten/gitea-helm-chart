@@ -339,7 +339,7 @@ data:
     ; KEY_FILE = https/key.pem
     ; Root directory containing templates and static files.
     ; default is the path where Gitea is executed
-    STATIC_ROOT_PATH =
+    STATIC_ROOT_PATH = /data/static
     ; Default path for App data
     APP_DATA_PATH = /data
     ; Application level GZIP support
