@@ -9,7 +9,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-REGISTRY=registry.keyporttech.com:30243
+REGISTRY=registry.keyporttech.com
 DOCKERHUB_REGISTRY="keyporttech"
 CHART=gitea
 VERSION = $(shell yq r Chart.yaml 'version')
