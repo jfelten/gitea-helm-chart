@@ -80,7 +80,7 @@ data:
     ; Whether repository file uploads are enabled. Defaults to `true`
     ENABLED = true
     ; Path for uploads. Defaults to `data/tmp/uploads` (tmp gets deleted on gitea restart)
-    TEMP_PATH = /data/tmp/uploads
+    TEMP_PATH = /data/gitea/tmp/uploads
     ; One or more allowed types, e.g. image/jpeg|image/png. Nothing means any file type
     ALLOWED_TYPES =
     ; Max size of each file in megabytes. Defaults to 3MB
@@ -356,7 +356,7 @@ data:
     ; Enables git-lfs support. true or false, default is false.
     LFS_START_SERVER = false
     ; Where your lfs files reside, default is data/lfs.
-    LFS_CONTENT_PATH = /data/lfs
+    LFS_CONTENT_PATH = /data/gitea/lfs
     ; LFS authentication secret, change this yourself
     LFS_JWT_SECRET =
     ; LFS authentication validity period (in time.Duration), pushes taking longer than this may fail.
@@ -465,7 +465,7 @@ data:
     ; default to persistable-channel
     TYPE = persistable-channel
     ; data-dir for storing persistable queues and level queues, individual queues will be named by their type
-    DATADIR = queues/
+    DATADIR = gitea/queues/
     ; Default queue length before a channel queue will block
     LENGTH = 20
     ; Batch size to send for batched queues
@@ -729,7 +729,7 @@ data:
     ; file: session file path, e.g. `data/sessions`
     ; redis: network=tcp,addr=:6379,password=macaron,db=0,pool_size=100,idle_timeout=180
     ; mysql: go-sql-driver/mysql dsn config string, e.g. `root:password@/session_table`
-    PROVIDER_CONFIG = /data/sessions
+    PROVIDER_CONFIG = /data/gitea/sessions
     ; Session cookie name
     COOKIE_NAME = i_like_gitea
     ; If you use session in https only, default is false
@@ -742,8 +742,8 @@ data:
     SESSION_LIFE_TIME = 86400
 
     [picture]
-    AVATAR_UPLOAD_PATH = /data/avatars
-    REPOSITORY_AVATAR_UPLOAD_PATH = /data/repo-avatars
+    AVATAR_UPLOAD_PATH = /data/gitea/avatars
+    REPOSITORY_AVATAR_UPLOAD_PATH = /data/gitea/repo-avatars
     ; How Gitea deals with missing repository avatars
     ; none = no avatar will be displayed; random = random avatar will be displayed; image = default image will be used
     REPOSITORY_AVATAR_FALLBACK = none
@@ -769,7 +769,7 @@ data:
     ; Whether attachments are enabled. Defaults to `true`
     ENABLED = true
     ; Path for attachments. Defaults to `/data/attachments`
-    PATH = /data/attachments
+    PATH = /data/gitea/attachments
     ; One or more allowed types, e.g. "image/jpeg|image/png". Use "*/*" for all types.
     ALLOWED_TYPES = image/jpeg|image/png|application/zip|application/gzip
     ; Max size of each file. Defaults to 4MB
