@@ -48,3 +48,10 @@
   kubectl port-forward $POD_NAME 8022:{{ .Values.service.ssh.port }}
 
 {{- end }}
+
+3. Create an admin user:
+
+kubectl exec -it --tty -n {{ .Release.Namespace }} \
+  $(kubectl get pod -n gitea -L app=gitea-gitea -o jsonpath='{.items[*].metadata.name}') -- \
+   su git -c "gitea admin create-user --username username --password supahsecret --admin \
+   --email username@email.tld  --config /data/gitea/conf/app.ini 
