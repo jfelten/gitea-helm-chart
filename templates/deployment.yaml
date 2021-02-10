@@ -28,8 +28,12 @@ spec:
       {{ include "gitea" . | indent 6 }}
       {{ include "memcached" . | indent 6 }}
       initContainers:
+      {{ if ne .Values.dbType "sqlite3" }}
       {{ include "init" . | indent 6 }}
       {{ include "initPostgres" . | indent 6 }}
+      {{- else }}
+      {{ include "firstrun" . | indent 6 }}
+      {{- end }}
       volumes:
       - name: gitea-data
       {{- if .Values.persistence.enabled }}

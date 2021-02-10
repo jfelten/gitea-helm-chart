@@ -20,7 +20,7 @@ data:
     ; Change it if you run locally
     RUN_USER = git
     ; Either "dev", "prod" or "test", default is "dev"
-    RUN_MODE = dev
+    RUN_MODE = prod
 
     [repository]
     ROOT =
@@ -400,6 +400,9 @@ data:
     USER = postgres
     ; Use PASSWD = `your password` for quoting if you use special characters in the password.
     PASSWD = POSTGRES_PASSWORD
+    {{ end }}
+    {{ if eq .Values.dbType "sqlite3" }}
+    DB_TYPE = sqlite3
     {{ end }}
     ; For "postgres" only, either "disable", "require" or "verify-full"
     SSL_MODE = disable
