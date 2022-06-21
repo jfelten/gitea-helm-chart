@@ -5,12 +5,14 @@ Create helm partial for gitea server
 - name: gitea
   image: {{ .Values.images.gitea }}
   imagePullPolicy: {{ .Values.images.imagePullPolicy }}
+  {{- if ne .Values.dbType "sqlite3"}}
   env:
   - name: POSTGRES_PASSWORD
     valueFrom:
       secretKeyRef:
         name: {{ template "db.fullname" . }}
         key: dbPassword
+  {{- end }}
   ports:
   - name: ssh
     containerPort: {{ .Values.service.ssh.port  }}
