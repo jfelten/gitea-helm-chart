@@ -6,6 +6,11 @@ Create helm partial for gitea server
   image: {{ .Values.images.gitea }}
   imagePullPolicy: {{ .Values.images.imagePullPolicy }}
   env:
+  - name: POSTGRES_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "db.fullname" . }}
+        key: dbUser
   - name: POSTGRES_PASSWORD
     valueFrom:
       secretKeyRef:
@@ -15,7 +20,7 @@ Create helm partial for gitea server
     value: &script |-
       mkdir -p /datatmp/gitea/conf
       if [ ! -f /datatmp/gitea/conf/app.ini ]; then
-        sed "s/POSTGRES_PASSWORD/${POSTGRES_PASSWORD}/g" < /etc/gitea/app.ini > /datatmp/gitea/conf/app.ini
+        sed "s/POSTGRES_PASSWORD/${POSTGRES_PASSWORD}/g; s/POSTGRES_USERNAME/${POSTGRES_USERNAME}/g" < /etc/gitea/app.ini > /datatmp/gitea/conf/app.ini
       fi
   command: ["/bin/sh",'-c', *script]
   volumeMounts:

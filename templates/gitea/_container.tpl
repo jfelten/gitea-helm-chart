@@ -7,6 +7,11 @@ Create helm partial for gitea server
   imagePullPolicy: {{ .Values.images.imagePullPolicy }}
   {{- if ne .Values.dbType "sqlite3"}}
   env:
+  - name: POSTGRES_USERNAME
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "db.fullname" . }}
+        key: dbUser
   - name: POSTGRES_PASSWORD
     valueFrom:
       secretKeyRef:
