@@ -1,3 +1,5 @@
+## This project is unmaintianed and archived. 
+
 # Gitea Helm chart
 [Gitea](https://gitea.com/) is a lightweight GitHub clone. This is for those who wish to self host their own git repos on kubernetes.
 
